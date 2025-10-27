@@ -23,7 +23,7 @@ async function fetchCategories() {
   }
 }
 
-export default async function Sidebar() {
+export  default async function Sidebar() {
   const categories = await fetchCategories();
 
   return (
