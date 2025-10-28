@@ -1,48 +1,20 @@
-// "use client";
-import Image from "next/image";
 import Sidebar from "./components/sidebar/sidebar";
 import ProductCard from "./components/ProductCard";
-// import { useEffect, useState } from "react";
-export default function Home() {
-  // const [products, setProducts] = useState([]);
-  // useEffect(()=>{
-  //   fetch('https://api.escuelajs.co/api/v1/products')
-  //   .then(res=>res.json())
-  //   .then(data=>{
-  //     setProducts(data);
-  //     console.log(data);
-  //   })
-  //   .catch(err=>alert('Error fetching products'));
-  // },[])
+export default async function Home() {
+      const res = await fetch("https://fakestoreapi.com/products",{next:{revalidate:70}});
+      const products = await res.json();
   return (
     <div className="flex ">
       <Sidebar/>
       <main className="mostafa-task">
         <div className="search-filters">
+          <div className="search"></div>
+          <div className="filters"></div>
         </div>
         <div className="products">
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
-          <ProductCard/>
+          {
+            products.map((pro,i)=><ProductCard key={i} product={pro}/>)
+          }
         </div>
       </main>
     </div>
