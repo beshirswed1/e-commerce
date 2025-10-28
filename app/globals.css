@@ -10,17 +10,54 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  
+  --clr1: #ffffff;  /* أبيض */
+  --clr2: #E6CBA8;  /* بيج مائل للذهبي الفاتح - دافئ أكتر */
+  --clr3: #14273E;  /* كحلي متوازن */
+  --clr4: #B7C7D6;  /* رمادي أزرق فاتح */
+  --clr5: #3E2723; 
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+nav{
+  position: sticky;
+  top: 0px;
+}
+.mostafa-task{
+  padding: 10px;
+  flex-grow: 1;
+  display: block;
+  .search-filters{
+    height: 70px;
+    border-radius: 40px;
+    background-color: var(--clr3);
+  }
+  .products{
+    margin-top:10px ;
+    height: fit-content;
+    display: grid;
+    padding: 10px;
+    grid-template-columns:  repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    border: none;
+    .card{
+      aspect-ratio: 1/1;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.212);
+      border-radius: 10px;
+      padding: 10px;
+    }
+  }
 }
