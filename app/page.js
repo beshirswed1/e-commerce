@@ -1,5 +1,6 @@
 import Sidebar from "./components/sidebar/sidebar";
 import ProductCard from "./components/ProductCard";
+import Slider from "./components/Slider";
 export default async function Home() {
       const res = await fetch("https://fakestoreapi.com/products",{next:{revalidate:70}});
       const products = await res.json();
@@ -7,6 +8,7 @@ export default async function Home() {
     <div className="flex ">
       <Sidebar/>
       <main className="mostafa-task">
+        <Slider/>
         <div className="search-filters">
           <div className="search"></div>
           <div className="filters"></div>
