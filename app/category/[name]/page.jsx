@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Filter from "@/components/sidebar/filter"; // مكونك الفعلي
+import Filter from "@/components/sidebar/filter"; // مكون الفلترة الجانبي
 import { useParams } from "next/navigation";
+import Link from "next/link"; // مهم جداً
 
 const CategoryPage = () => {
   const params = useParams();
@@ -12,12 +13,9 @@ const CategoryPage = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-const [searchTerm, setSearchTerm] = useState("");
-const [priceRange, setPriceRange] = useState(1000);
-const [minRating, setMinRating] = useState(0);
-
-
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [priceRange, setPriceRange] = useState(1000);
+  const [minRating, setMinRating] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,7 +45,14 @@ const [minRating, setMinRating] = useState(0);
             fill="none"
             viewBox="0 0 24 24"
           >
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
             <path
               className="opacity-75"
               fill="currentColor"
@@ -71,32 +76,66 @@ const [minRating, setMinRating] = useState(0);
       </div>
     );
 
-const filteredProducts = products.filter((item) => {
-  const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
-  const matchesPrice = item.price <= priceRange;
-  const matchesRating = item.rating?.rate >= minRating; // assuming the API has `rating.rate`
-  return matchesSearch && matchesPrice && matchesRating;
-});
+  const filteredProducts = products.filter((item) => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPrice = item.price <= priceRange;
+    const matchesRating = item.rating?.rate >= minRating;
+    return matchesSearch && matchesPrice && matchesRating;
+  });
 
-  return (
-    <div
-      className="min-h-screen p-4 sm:p-8 md:p-12"
-      style={{
-        background: "linear-gradient(180deg, #101F30 0%, #A2B4C0 50%, #F3EEE8 100%)",
-        fontFamily: "Poppins, Inter, sans-serif",
-      }}
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* رأس الصفحة */}
-        <div className="py-10 mb-8 border-b-2 border-[#A2B4C0]/50">
-          <h1 className="text-4xl md:text-5xl font-extrabold capitalize text-[#F3EEE8] drop-shadow-lg">
-            فئة: <span className="text-[#D8C2A7]">{name.replace(/-/g, " ")}</span>
-          </h1>
-          <p className="text-xl mt-2 text-[#A2B4C0]">اكتشف أحدث المنتجات في هذه الفئة.</p>
+  const ProductCard = ({ product }) => {
+    return (
+      <div className="bg-[#101F30] rounded-2xl shadow-xl border border-transparent transform transition-all duration-500 hover:shadow-3xl hover:scale-[1.03] hover:border-[#D8C2A7]/50">
+        {/* صورة المنتج */}
+        <div className="group relative bg-[#F3EEE8] flex items-center justify-center h-56 p-4 rounded-t-2xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent group-hover:from-black/10 group-hover:to-black/30 transition-opacity duration-500 pointer-events-none z-10"></div>
+          <img
+            src={product.image}
+            alt={product.title}
+            className="max-h-48 object-contain transition-transform duration-500 group-hover:scale-110"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                "https://placehold.co/400x300/101F30/A2B4C0?text=صورة+غير+متوفرة";
+              e.target.className = "max-h-48 object-cover";
+            }}
+          />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
+        {/* تفاصيل المنتج */}
+        <div className="p-5">
+          <h3 className="font-semibold text-lg text-[#A2B4C0] line-clamp-2 mb-2 min-h-[3rem]">
+            {product.title}
+          </h3>
+          <p className="text-[#D8C2A7] mb-2">
+            {product.description.length > 80
+              ? product.description.substring(0, 80) + "..."
+              : product.description}
+          </p>
+          <p className="text-xl text-[#D8C2A7] font-extrabold mb-4">${product.price.toFixed(2)}</p>
+
+          {/* زر التفاصيل */}
+          <Link
+            href={`/category/${encodeURIComponent(product.category)}/${product.id}`}
+            className="w-full py-3 flex items-center justify-center gap-2 bg-[#A2B4C0] text-[#F3EEE8] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#D8C2A7] hover:text-[#101F30]"
+          >
+            تفاصيل المنتج
+          </Link>
+
+          {/* زر أضف للسلة */}
+          <button className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
+            أضف للسلة
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F3EEE8] px-4 md:px-8 py-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* فلتر المنتجات */}
+        <div className="md:w-1/4 w-full">
           <Filter
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -105,54 +144,17 @@ const filteredProducts = products.filter((item) => {
             minRating={minRating}
             setMinRating={setMinRating}
           />
+        </div>
 
-
-          {/* شبكة المنتجات */}
-          <div className="flex-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
-              {filteredProducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-[#101F30] rounded-2xl shadow-xl border border-transparent transform transition-all duration-500 hover:shadow-3xl hover:scale-[1.03] hover:border-[#D8C2A7]/50"
-                >
-                  {/* الصورة */}
-                  <div className="group relative bg-white flex items-center justify-center h-56 p-4 rounded-t-2xl overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent group-hover:from-black/10 group-hover:to-black/30 transition-opacity duration-500 pointer-events-none z-10"></div>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="max-h-48 object-contain transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://placehold.co/400x300/101F30/A2B4C0?text=صورة+غير+متوفرة";
-                        e.target.className = "max-h-48 object-cover";
-                      }}
-                    />
-                  </div>
-
-                  {/* التفاصيل */}
-                  <div className="p-5">
-                    <h3 className="font-semibold text-lg text-[#A2B4C0] line-clamp-2 mb-2 min-h-[3rem]">
-                      {item.title}
-                    </h3>
-                    <p className="text-xl text-[#D8C2A7] font-extrabold mb-4">${item.price.toFixed(2)}</p>
-
-                    <button className="w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.44C4.68 15.7 5.58 17 7 17h11c1.1 0 2-.9 2-2s-.9-2-2-2H7l1.1-2h8.65c.37 0 .7-.25.84-.63l3.05-7.64L23 4H5.21c-.45-1.12-1.63-2-3.04-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-                      </svg>
-                      أضف للسلة
-                    </button>
-                  </div>
-                </div>
-              ))}
+        {/* قائمة المنتجات */}
+        <div className="md:w-3/4 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)
+          ) : (
+            <div className="text-center text-[#101F30] col-span-full mt-10">
+              لا توجد منتجات مطابقة للمعايير المحددة.
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

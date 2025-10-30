@@ -95,7 +95,7 @@
     export default function SidebarFilter({ searchTerm, setSearchTerm, priceRange, setPriceRange, minRating, setMinRating }) {
     const handleClearFilters = () => {
         setSearchTerm("");
-        setPriceRange(100);
+        setPriceRange(1000);
         setMinRating(0);
     };
 

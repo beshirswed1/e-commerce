@@ -29,7 +29,7 @@ export default function Sidebar() {
 
   return (
     <nav
-      className="bg-gradient-to-b from-gray-900 to-gray-800 text-white md:w-64 w-full md:h-screen p-5 flex md:flex-col flex-row md:space-y-4 space-x-2 md:space-x-0 shadow-lg overflow-hidden"
+      className="bg-[#101F30] text-[#F3EEE8] md:w-64 w-full md:h-screen p-5 flex md:flex-col flex-row md:space-y-4 space-x-2 md:space-x-0 shadow-lg overflow-hidden"
       style={{
         overflowY: "auto",
         scrollbarWidth: "none", // لإخفاء سكرول في فايرفوكس
@@ -44,20 +44,28 @@ export default function Sidebar() {
       `}</style>
 
       {/* العنوان */}
-      <div className="flex items-center justify-between md:mb-4 md:border-b border-gray-700 pb-2">
-        <h2 className="text-2xl font-bold md:block hidden tracking-wide">Categories</h2>
+      <div className="flex items-center justify-between md:mb-4 border-b border-[#A2B4C0] pb-2">
+        <h2 className="text-2xl font-bold md:block hidden tracking-wide">
+          Categories
+        </h2>
         <h2 className="text-xl font-bold md:hidden block">Cats</h2>
       </div>
 
       {/* الحالة أثناء التحميل */}
       {loading ? (
-        <div className="text-gray-400 animate-pulse">Loading categories...</div>
+        <div className="text-[#A2B4C0] animate-pulse">Loading categories...</div>
       ) : categories.length === 0 ? (
-        <div className="text-red-400">Failed to load categories.</div>
+        <div className="text-[#2B1A0F] font-semibold">
+          Failed to load categories.
+        </div>
       ) : (
         <ul className="md:space-y-2 flex md:flex-col flex-row md:gap-2 gap-3">
           {categories.slice(0, 10).map((cat, index) => (
-            <CategoryItem key={index} name={cat} />
+            <CategoryItem
+              key={index}
+              name={cat}
+              className="hover:bg-[#D8C2A7]/15 transition-colors duration-300 ease-in-out"
+            />
           ))}
         </ul>
       )}
