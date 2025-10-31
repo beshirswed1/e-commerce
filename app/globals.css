@@ -76,6 +76,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+ 
 }
 
 .dark {
@@ -132,4 +134,8 @@
   button {
     @apply bg-primary text-primary-foreground rounded-md px-4 py-2 hover:bg-primary/80 transition;
   }
+
+
+ 
+
 }
