@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import Filter from "@/components/sidebar/filter"; // مكون الفلترة الجانبي
 import { useParams } from "next/navigation";
 import Link from "next/link"; // مهم جداً
+import { useAppContext } from '../../context/AppContext'; //علشان اقدر استخدم السلة 
 
 const CategoryPage = () => {
   const params = useParams();
   const name = decodeURIComponent(params.name);
+const { addToCart } = useAppContext(); //علشان يجيب دالة الاضافة للسلة 
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
@@ -123,7 +125,9 @@ const CategoryPage = () => {
           </Link>
 
           {/* زر أضف للسلة */}
-          <button className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
+          <button 
+           onClick={() => addToCart(product.id.toString())} //علشان اول ما يضغط علي الزر تتضاف في السلة 
+          className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
             أضف للسلة
           </button>
         </div>

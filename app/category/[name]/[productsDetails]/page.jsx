@@ -2,11 +2,12 @@
 
     import React, { useEffect, useState } from "react";
     import { useParams, useRouter } from "next/navigation";
+    import { useAppContext } from '../../../context/AppContext';  //علشان اقدر استخدم السلة 
 
     export default function ProductsDetailsPage() {
     const params = useParams();
     const router = useRouter();
-
+    const { addToCart } = useAppContext(); //علشان يجيب دالة الاضافة للسلة 
     const { productsDetails } = params; // الـ ID من URL
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -82,7 +83,7 @@
                 تحقق من الرابط أو اتصالك بالإنترنت وحاول مرة أخرى.
             </p>
             <button
-                onClick={() => router.back()}
+                onClick={() => router.back()} 
                 className="px-6 py-3 bg-[#A2B4C0] text-[#101F30] font-bold rounded-xl hover:bg-[#D8C2A7] hover:text-[#F3EEE8] transition-all"
             >
                 🔙 العودة
@@ -141,7 +142,9 @@
                 🔙 رجوع إلى الفئة
                 </button>
 
-                <button className="w-full md:w-1/2 py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8]">
+                <button
+                 onClick={() => addToCart(product.id.toString())} //علشان اول ما يضغط علي الزر تتضاف في السلة 
+                 className="w-full md:w-1/2 py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8]">
                 🛒 أضف للسلة
                 </button>
             </div>
