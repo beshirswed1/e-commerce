@@ -80,9 +80,13 @@ const CartPage = () => {
                 .toFixed(2)} جنيه
             </div>
 
-            <button className="mt-4 px-6 py-2 bg-[#B7C7D6] text-[#14273E] rounded-md hover:bg-[#E6CBA8] hover:text-[#14273E] transition-colors font-medium">
-              إتمام الشراء
-            </button>
+            {/* ده لينك  صفحة checkout  بيربط الصفحة دي بي checkout*/}
+            <Link href="/checkout">
+              <button className="mt-4 px-6 py-2 bg-[#B7C7D6] text-[#14273E] rounded-md hover:bg-[#E6CBA8] hover:text-[#14273E] transition-colors font-medium">
+                إتمام الشراء
+              </button>
+            </Link>
+
           </div>
         )}
       </div>

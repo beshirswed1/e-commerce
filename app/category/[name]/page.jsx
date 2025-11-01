@@ -9,7 +9,7 @@ import { useAppContext } from '../../context/AppContext'; //علشان اقدر 
 const CategoryPage = () => {
   const params = useParams();
   const name = decodeURIComponent(params.name);
-const { addToCart } = useAppContext(); //علشان يجيب دالة الاضافة للسلة 
+  const { addToCart } = useAppContext(); //علشان يجيب دالة الاضافة للسلة 
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
@@ -90,7 +90,7 @@ const { addToCart } = useAppContext(); //علشان يجيب دالة الاضا
       <div className="bg-[#101F30] rounded-2xl shadow-xl border border-transparent transform transition-all duration-500 hover:shadow-3xl hover:scale-[1.03] hover:border-[#D8C2A7]/50">
         {/* صورة المنتج */}
         <div className="group relative bg-[#F3EEE8] flex items-center justify-center h-56 p-4 rounded-t-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent group-hover:from-black/10 group-hover:to-black/30 transition-opacity duration-500 pointer-events-none z-10"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-transparent to-transparent group-hover:from-black/10 group-hover:to-black/30 transition-opacity duration-500 pointer-events-none z-10"></div>
           <img
             src={product.image}
             alt={product.title}
@@ -106,7 +106,7 @@ const { addToCart } = useAppContext(); //علشان يجيب دالة الاضا
 
         {/* تفاصيل المنتج */}
         <div className="p-5">
-          <h3 className="font-semibold text-lg text-[#A2B4C0] line-clamp-2 mb-2 min-h-[3rem]">
+          <h3 className="font-semibold text-lg text-[#A2B4C0] line-clamp-2 mb-2 min-h-12">
             {product.title}
           </h3>
           <p className="text-[#D8C2A7] mb-2">
@@ -125,9 +125,9 @@ const { addToCart } = useAppContext(); //علشان يجيب دالة الاضا
           </Link>
 
           {/* زر أضف للسلة */}
-          <button 
-           onClick={() => addToCart(product.id.toString())} //علشان اول ما يضغط علي الزر تتضاف في السلة 
-          className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
+          <button
+            onClick={() => addToCart(product.id.toString())} //علشان اول ما يضغط علي الزر تتضاف في السلة 
+            className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-[#D8C2A7] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#A2B4C0] hover:text-[#F3EEE8] group">
             أضف للسلة
           </button>
         </div>
