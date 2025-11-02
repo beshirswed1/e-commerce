@@ -1,12 +1,15 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
-import Link from 'next/link';
-import { CreditCard, Wallet, Banknote, HandCoins } from 'lucide-react'; // أيقونات طرق الدفع
+import { CreditCard, Wallet, Banknote, HandCoins, CheckCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CheckoutPage = () => {
     const { cartItems } = useAppContext();
     const [products, setProducts] = useState([]);
+    const [step, setStep] = useState(1);
+    const [error, setError] = useState('');
+
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -15,11 +18,14 @@ const CheckoutPage = () => {
         city: '',
         governorate: '',
         postalCode: '',
-        payment: 'cash',
-        extraData: '',
+        payment: '',
+        cardNumber: '',
+        cardName: '',
+        cardExpiry: '',
+        cardCvv: '',
+        walletNumber: '',
     });
 
-    //  نجيب بيانات المنتجات من API عشان نعرف الأسعار
     useEffect(() => {
         fetch('https://fakestoreapi.com/products')
             .then(res => res.json())
@@ -27,7 +33,6 @@ const CheckoutPage = () => {
             .catch(err => console.error('Failed to fetch products:', err));
     }, []);
 
-    //  نربط السلة بالمنتجات 
     const cartProductDetails = Object.keys(cartItems)
         .map(itemId => {
             const product = products.find(p => p.id.toString() === itemId);
@@ -43,236 +48,207 @@ const CheckoutPage = () => {
     };
 
     const handlePaymentSelect = method => {
-        setFormData(prev => ({ ...prev, payment: method, extraData: '' }));
+        setFormData(prev => ({ ...prev, payment: method }));
     };
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(' الطلب اتبعت:', { formData, cartProductDetails });
-        alert('تم تأكيد الطلب بنجاح ');
+        alert('تم تأكيد الطلب بنجاح ✅');
     };
+
+    // ✅ التحقق قبل الانتقال
+    const nextStep = () => {
+        setError('');
+        if (step === 1) {
+            const requiredFields = ['name', 'phone', 'email', 'address', 'city', 'governorate'];
+            const emptyFields = requiredFields.filter(field => !formData[field]);
+            if (emptyFields.length > 0) {
+                setError('من فضلك املأ جميع البيانات المطلوبة قبل الانتقال 🚫');
+                return;
+            }
+        }
+
+        if (step === 2) {
+            if (!formData.payment) {
+                setError('من فضلك اختر طريقة الدفع قبل الانتقال 🚫');
+                return;
+            }
+            if (formData.payment === 'card') {
+                const requiredCard = ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'];
+                const emptyCard = requiredCard.filter(field => !formData[field]);
+                if (emptyCard.length > 0) {
+                    setError('من فضلك املأ جميع بيانات البطاقة قبل المتابعة 🚫');
+                    return;
+                }
+            }
+            if (formData.payment === 'wallet' && !formData.walletNumber) {
+                setError('من فضلك اكتب رقم المحفظة قبل المتابعة 🚫');
+                return;
+            }
+        }
+
+        setStep(prev => Math.min(prev + 1, 3));
+    };
+
+    const prevStep = () => {
+        setError('');
+        setStep(prev => Math.max(prev - 1, 1));
+    };
+
+    const steps = ['البيانات', 'الدفع', 'تأكيد الطلب'];
 
     return (
         <div className="min-h-screen bg-[#14273E] p-6">
-            <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-                <h1 className="text-3xl font-bold mb-6 text-[#14273E]">إتمام الشراء</h1>
+            <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold mb-8 text-[#14273E] text-center">إتمام الشراء</h1>
 
-                {cartProductDetails.length === 0 ? (
-                    <p className="text-[#14273E] text-lg">
-                        السلة فاضية.{' '}
-                        <Link href="/" className="text-[#14273E] underline hover:text-[#E6CBA8]">
-                            ارجع للتسوق
-                        </Link>
-                    </p>
-                ) : (
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {/*  فورم بيانات العميل */}
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            {/* بيانات أساسية */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">الاسم الكامل</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">الإيميل</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
+                {/* 🔹 Stepper */}
+                <div className="flex justify-between items-center mb-10 relative">
+                    {steps.map((label, index) => (
+                        <div key={index} className="flex-1 text-center relative">
+                            <div
+                                className={`w-10 h-10 mx-auto flex items-center justify-center rounded-full 
+                                ${index + 1 <= step ? 'bg-[#14273E] text-[#E6CBA8]' : 'bg-gray-300 text-[#14273E]'}`}
+                            >
+                                {index + 1 < step ? <CheckCircle size={20} /> : index + 1}
                             </div>
+                            <p className={`mt-2 font-medium ${index + 1 <= step ? 'text-[#14273E]' : 'text-gray-500'}`}>
+                                {label}
+                            </p>
+                            {index < steps.length - 1 && (
+                                <div
+                                    className={`absolute top-5 left-1/2 w-full h-[3px] -z-10 ${index + 1 < step ? 'bg-[#14273E]' : 'bg-gray-300'
+                                        }`}
+                                ></div>
+                            )}
+                        </div>
+                    ))}
+                </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">رقم الموبايل</label>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                        required
-                                    />
+                {/* المحتوى */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={step}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {step === 1 && (
+                            <form className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" name="name" placeholder="الاسم الكامل" value={formData.name} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
+                                    <input type="email" name="email" placeholder="البريد الإلكتروني" value={formData.email} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" name="phone" placeholder="رقم الهاتف" value={formData.phone} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
+                                    <input type="text" name="postalCode" placeholder="الرمز البريدي (اختياري)" value={formData.postalCode} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
+                                </div>
+                                <input type="text" name="address" placeholder="العنوان بالتفصيل" value={formData.address} onChange={handleChange} className="w-full border p-2 rounded-md border-[#B7C7D6]" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input type="text" name="city" placeholder="المدينة" value={formData.city} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
+                                    <input type="text" name="governorate" placeholder="المحافظة" value={formData.governorate} onChange={handleChange} className="border p-2 rounded-md border-[#B7C7D6]" />
                                 </div>
 
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">كود بريدي</label>
-                                    <input
-                                        type="text"
-                                        name="postalCode"
-                                        value={formData.postalCode}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                    />
-                                </div>
-                            </div>
+                                {error && <p className="text-red-600 font-medium mt-3 text-sm">{error}</p>}
+                            </form>
+                        )}
 
+                        {step === 2 && (
                             <div>
-                                <label className="block text-[#14273E] font-medium mb-1">العنوان بالتفصيل</label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={formData.address}
-                                    onChange={handleChange}
-                                    className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                    required
-                                />
-                            </div>
+                                <h2 className="text-lg font-semibold mb-6 text-[#14273E]">طريقة الدفع</h2>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">المدينة</label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[#14273E] font-medium mb-1">المحافظة</label>
-                                    <input
-                                        type="text"
-                                        name="governorate"
-                                        value={formData.governorate}
-                                        onChange={handleChange}
-                                        className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            {/*  طرق الدفع  */}
-                            <div>
-                                <label className="block text-[#14273E] font-semibold text-lg mb-3">طريقة الدفع</label>
-                                <div className="flex flex-col gap-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {[
-                                        { id: 'cash', label: 'الدفع عند الاستلام', icon: <HandCoins size={22} /> },
-                                        { id: 'card', label: 'بطاقة بنكية (Visa / MasterCard)', icon: <CreditCard size={22} /> },
-                                        { id: 'wallet', label: 'محفظة إلكترونية (Vodafone / Etisalat / Orange)', icon: <Wallet size={22} /> },
-                                        { id: 'bank', label: 'تحويل بنكي مباشر', icon: <Banknote size={22} /> },
+                                        { id: 'cash', label: 'الدفع عند الاستلام', icon: <HandCoins size={24} /> },
+                                        { id: 'card', label: 'بطاقة بنكية', icon: <CreditCard size={24} /> },
+                                        { id: 'wallet', label: 'محفظة إلكترونية', icon: <Wallet size={24} /> },
+                                        { id: 'bank', label: 'تحويل بنكي', icon: <Banknote size={24} /> },
                                     ].map(option => (
-                                        <div
+                                        <motion.div
                                             key={option.id}
                                             onClick={() => handlePaymentSelect(option.id)}
-                                            className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all shadow-sm ${formData.payment === option.id
-                                                    ? 'border-[#14273E] bg-[#14273E]/10 ring-2 ring-[#14273E]/30'
-                                                    : 'border-[#B7C7D6] hover:border-[#14273E]/40 hover:bg-[#E6CBA8]/10'
+                                            whileHover={{ scale: 1.02 }}
+                                            className={`p-5 rounded-xl border cursor-pointer flex items-center gap-3 ${formData.payment === option.id
+                                                    ? 'border-[#14273E] bg-[#E6CBA8]/10'
+                                                    : 'border-[#B7C7D6] hover:border-[#14273E]/50'
                                                 }`}
                                         >
-                                            {/* الأيقونة */}
-                                            <div
-                                                className={`p-2 rounded-full ${formData.payment === option.id ? 'bg-[#14273E] text-[#E6CBA8]' : 'bg-[#B7C7D6]/40 text-[#14273E]'
-                                                    }`}
-                                            >
-                                                {option.icon}
-                                            </div>
-
-                                            {/* النص */}
-                                            <div>
-                                                <p className="font-medium text-[#14273E]">{option.label}</p>
-                                                {formData.payment === option.id && (
-                                                    <p className="text-sm text-[#14273E]/70">تم اختيار طريقة الدفع</p>
-                                                )}
-                                            </div>
-                                        </div>
+                                            {option.icon}
+                                            <span>{option.label}</span>
+                                        </motion.div>
                                     ))}
                                 </div>
 
-                                {/*  بيانات  حسب نوع الدفع */}
-                                <div className="mt-4">
-                                    {formData.payment === 'card' && (
-                                        <div className="space-y-3">
-                                            <input
-                                                type="text"
-                                                name="extraData"
-                                                placeholder="رقم البطاقة البنكية"
-                                                value={formData.extraData}
-                                                onChange={handleChange}
-                                                className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                                required
-                                            />
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <input
-                                                    type="text"
-                                                    placeholder="تاريخ الانتهاء (MM/YY)"
-                                                    className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="رمز الأمان (CVV)"
-                                                    className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {formData.payment === 'wallet' && (
-                                        <input
-                                            type="text"
-                                            name="extraData"
-                                            placeholder="رقم المحفظة الإلكترونية"
-                                            value={formData.extraData}
-                                            onChange={handleChange}
-                                            className="w-full border border-[#B7C7D6] p-2 rounded-md"
-                                            required
-                                        />
-                                    )}
-
-                                    {formData.payment === 'bank' && (
-                                        <textarea
-                                            name="extraData"
-                                            placeholder="اسم البنك أو رقم الحساب البنكي"
-                                            value={formData.extraData}
-                                            onChange={handleChange}
-                                            className="w-full border border-[#B7C7D6] p-2 rounded-md h-20"
-                                            required
-                                        />
-                                    )}
-                                </div>
-                            </div>
-
-                            {/*  زرار تأكيد الطلب */}
-                            <button
-                                type="submit"
-                                className="w-full bg-[#14273E] text-[#E6CBA8] py-2 rounded-md hover:bg-[#E6CBA8] hover:text-[#14273E] transition-colors"
-                            >
-                                تأكيد الطلب
-                            </button>
-                        </form>
-
-                        {/*  ملخص الطلب */}
-                        <div>
-                            <h2 className="text-2xl font-semibold text-[#14273E] mb-4">ملخص الطلب</h2>
-                            <div className="space-y-4">
-                                {cartProductDetails.map(item => (
-                                    <div key={item.id} className="flex justify-between items-center border-b pb-2">
-                                        <p className="text-[#14273E] font-medium">{item.title}</p>
-                                        <p className="text-[#14273E]">{(item.price * item.quantity).toFixed(2)} جنيه</p>
+                                {formData.payment === 'card' && (
+                                    <div className="mt-6 grid grid-cols-2 gap-4">
+                                        <input name="cardNumber" placeholder="رقم البطاقة" value={formData.cardNumber} onChange={handleChange} className="border p-2 rounded-md" />
+                                        <input name="cardName" placeholder="اسم صاحب البطاقة" value={formData.cardName} onChange={handleChange} className="border p-2 rounded-md" />
+                                        <input name="cardExpiry" placeholder="MM / YY" value={formData.cardExpiry} onChange={handleChange} className="border p-2 rounded-md" />
+                                        <input name="cardCvv" placeholder="CVV" value={formData.cardCvv} onChange={handleChange} className="border p-2 rounded-md" />
                                     </div>
-                                ))}
+                                )}
+
+                                {formData.payment === 'wallet' && (
+                                    <div className="mt-6">
+                                        <input
+                                            name="walletNumber"
+                                            placeholder="رقم المحفظة أو الهاتف"
+                                            value={formData.walletNumber}
+                                            onChange={handleChange}
+                                            className="border p-2 rounded-md w-full"
+                                        />
+                                    </div>
+                                )}
+
+                                {error && <p className="text-red-600 font-medium mt-3 text-sm">{error}</p>}
                             </div>
-                            <div className="text-right text-xl font-bold text-[#14273E] mt-4">
-                                المجموع الكلي: {total.toFixed(2)} جنيه
+                        )}
+
+                        {step === 3 && (
+                            <div>
+                                <h2 className="text-xl font-semibold text-[#14273E] mb-4">مراجعة وتأكيد الطلب</h2>
+                                <div className="space-y-3">
+                                    {cartProductDetails.map(item => (
+                                        <div key={item.id} className="flex justify-between border-b pb-2">
+                                            <p>{item.title}</p>
+                                            <p>{(item.price * item.quantity).toFixed(2)} جنيه</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-right text-lg mt-4 font-bold text-[#14273E]">
+                                    المجموع الكلي: {total.toFixed(2)} جنيه
+                                </p>
                             </div>
-                        </div>
-                    </div>
-                )}
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+
+                {/* الأزرار */}
+                <div className="flex justify-between mt-10">
+                    <button
+                        onClick={prevStep}
+                        disabled={step === 1}
+                        className="px-6 py-2 rounded-md bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+                    >
+                        السابق
+                    </button>
+                    {step < 3 ? (
+                        <button
+                            onClick={nextStep}
+                            className="px-6 py-2 rounded-md bg-[#14273E] text-[#E6CBA8] hover:bg-[#E6CBA8] hover:text-[#14273E]"
+                        >
+                            التالي
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleSubmit}
+                            className="px-6 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
+                        >
+                            تأكيد الطلب
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
