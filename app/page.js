@@ -13,11 +13,6 @@ export default async function Home() {
       <Sidebar />
 
       <main className="flex-1 p-8 space-y-8">
-        {/* عنوان بشير */}
-        <h1 className="text-2xl font-bold caret-amber-900 bg-blue-800 text-center p-3 rounded-lg text-white">
-          يامصطفى دا الهوم اشتغل هون 😎
-        </h1>
-
         {/* شغل مصطفى */}
         <section className="mostafa-task">
           <Slider />
