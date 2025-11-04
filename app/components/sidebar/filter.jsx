@@ -92,7 +92,7 @@
     };
 
     // Sidebar filter component
-    export default function SidebarFilter({ searchTerm, setSearchTerm, priceRange, setPriceRange, minRating, setMinRating }) {
+    export default  function SidebarFilter({ searchTerm, setSearchTerm, priceRange, setPriceRange, minRating, setMinRating }) {
     const handleClearFilters = () => {
         setSearchTerm("");
         setPriceRange(1000);
@@ -100,7 +100,7 @@
     };
 
         return (
-        <aside className="md:sticky md:top-24 md:h-[calc(100vh-6rem)] w-full md:w-72 flex-shrink-0 bg-[#F3EEE8] p-4 md:p-0">
+<aside className="md:sticky md:top-24 md:h-[calc(100vh-6rem)] overflow-y-auto w-full md:w-72 flex-shrink-0 bg-[#F3EEE8] p-4 md:p-0">
         <div className="flex flex-col h-full bg-white rounded-3xl shadow-xl p-5 space-y-6 md:overflow-hidden">
             <div className="flex items-center justify-between border-b border-blue-100 pb-3">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center p-2">
@@ -149,6 +149,12 @@
 
             <RatingFilter minRating={minRating} setMinRating={setMinRating} />
 
+<Link 
+  href="/" 
+  className="w-full md:w-full py-3 flex items-center justify-center gap-2 bg-[#A2B4C0] text-[#101F30] rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[#D8C2A7] hover:text-[#F3EEE8]"
+>
+  🔙 رجوع إلى الصفحه الرئيسيه
+</Link>
             <div className="mt-auto pt-4 border-t border-gray-100 text-center text-xs text-gray-500">
     بحث: <strong>{searchTerm || "الكل"}</strong> | سعر ≤ ${Number(priceRange || 0)} | تقييم ≥ {minRating}
             </div>
