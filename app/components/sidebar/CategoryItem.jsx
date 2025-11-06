@@ -1,22 +1,31 @@
 import React from "react";
+import Link from "next/link";
 
-export default function CategoryItem({ name = "unknown", className = "" , onClick}) {
-  // الافتراضي: عندما يضغط المستخدم نعطيه console.log أو نقدر نمرر onClick من الأب
+export default function CategoryItem({
+  name = "Unknown",
+  hoverColor = "#D8C2A7",
+  textColor = "#F3EEE8",
+  borderColor = "#D8C2A7",
+}) {
   return (
     <li>
-      <button
-        onClick={() => {
-          if (typeof onClick === "function") return onClick(name);
-          // افتراضي: فلترة أو ذهاب لصفحة - غير مطلوب الآن، نعرض console
-          console.log("selected category:", name);
+      <Link
+        href={`/category/${encodeURIComponent(name)}`}
+        className="block w-full text-left px-3 py-2 rounded-lg transition-all duration-200 capitalize border border-transparent"
+        style={{
+          color: textColor,
         }}
-        className={
-          "w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 transition-colors duration-200 text-sm capitalize " +
-          className
-        }
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = `${hoverColor}22`;
+          e.currentTarget.style.borderColor = hoverColor;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "transparent";
+          e.currentTarget.style.borderColor = "transparent";
+        }}
       >
         {name}
-      </button>
+      </Link>
     </li>
   );
 }
