@@ -14,6 +14,7 @@ const Navbar = () => {
     { title: "Home", href: "/" },
     { title: "About Us", href: "/about" },
     { title: "Contact", href: "/contact" },
+    { title: "Help", href: "/help" },       //دي صفحة HELP يبشير ممكن نغير مكنها من اي واحده  من فوق 
   ];
 
   return (
