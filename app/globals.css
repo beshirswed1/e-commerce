@@ -54,7 +54,7 @@
 /* --- Root Default Variables --- */
 :root {
   --radius: 0.625rem;
-  
+
   /* Base Colors */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -97,11 +97,11 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   /* Custom Tailwind Colors */
-  --color-bg: #F3EEE8; /* WHITE LINEN */
-  --color-dark: #101F30; /* MIRAGE */
-  --color-cream: #D8C2A7; /* AKAROA */
-  --color-muted: #A2B4C0; /* CREOLE */
-  --color-brown: #2B1A0F; /* بني رصين */
+  --color-bg: #F3EEE8;
+  --color-dark: #101F30;
+  --color-cream: #D8C2A7;
+  --color-muted: #A2B4C0;
+  --color-brown: #2B1A0F;
 }
 
 /* --- Dark Mode Variables --- */
