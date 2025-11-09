@@ -255,9 +255,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+
+import Link from 'next/link';
+
 import Sidebar from './components/sidebar/sidebar';
 import Navbar from './components/Navbar';
 import { FiTruck, FiCreditCard, FiRefreshCcw, FiTool } from "react-icons/fi";
+import { ShoppingCart, Star, Info } from "lucide-react";
 import { 
   FaFacebook, FaInstagram, FaTwitter, 
   FaCcVisa, FaCcMastercard, FaCcPaypal, 
@@ -395,7 +399,7 @@ function Hero({ slides, onPrimaryCTA, onSecondaryCTA }) {
   }
 
   return (
-    <section aria-label="Hero" className="w-full relative overflow-hidden rounded-lg">
+    <section aria-label="Hero" className="w-full relative overflow-hidden rounded-lg mt-14">
       <div className="relative h-[420px] md:h-[520px] rounded-lg">
         {slides.map((s, i) => (
           <div
@@ -481,7 +485,7 @@ function Hero({ slides, onPrimaryCTA, onSecondaryCTA }) {
    =========================== */
 function CategoriesGrid({ data }) {
   return (
-    <section aria-label="Categories" className="mt-10">
+    <section aria-label="Categories" className="mt-10 ">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-2xl font-semibold mb-4">تصفح حسب الفئة</h2>
         <p className="text-sm text-slate-600 mb-6">تصفح حسب الطراز: عصري • كلاسيكي • ريفي</p>
@@ -518,43 +522,92 @@ function CategoriesGrid({ data }) {
 /* ===========================
    Featured Products
    =========================== */
-function ProductCard({ p, onAdd }) {
+export  function ProductCard({ p, onAdd }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden group">
-      <div className="relative h-56">
-        <Image src={p.image} alt={p.title} fill className="object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
-        <div className="absolute top-3 left-3">
-          <span className="px-2 py-1 rounded text-xs" style={{ background: 'var(--color-accent)', color: 'var(--color-strong)' }}>
-            Best Seller
-          </span>
+    <div
+      className="
+        relative bg-[#1B263B] rounded-3xl overflow-hidden 
+        shadow-md hover:shadow-2xl 
+        transform transition-all duration-500 
+        hover:scale-[1.03] hover:-translate-y-2
+        border border-[#415A77]/30 group cursor-pointer
+      "
+    >
+      {/* صورة المنتج */}
+      <div className="relative h-64 flex items-center justify-center bg-[#E0E1DD] overflow-hidden">
+        <Image
+          src={p.image}
+          alt={p.title}
+          fill
+          className="object-contain p-6 transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              "https://placehold.co/400x300/101F30/A2B4C0?text=No+Image";
+          }}
+        />
+
+        {/* سعر المنتج */}
+        <div className="absolute top-3 left-3 bg-[#D8C2A7]/80 text-[#0D1B2A] px-3 py-1 rounded-full text-sm font-semibold shadow-md">
+          ${p.price.toFixed(2)}
         </div>
+
+        {/* تأثير الهوفر العلوي */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </div>
-      <div className="p-4">
-        <h4 className="font-medium text-sm md:text-base">{p.title}</h4>
-        <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center gap-2">
-            <div className="text-lg font-semibold">{p.price}$</div>
-            <div className="text-xs text-slate-500">VAT included</div>
-          </div>
-          <div className="text-sm">
-            <StarRating value={p.rating} />
-          </div>
+
+      {/* تفاصيل المنتج */}
+      <div className="p-5 text-[#E0E1DD] flex flex-col justify-between min-h-[230px]">
+        <div>
+          <h3 className="text-lg font-bold mb-2 line-clamp-2 text-[#D8C2A7]">
+            {p.title}
+          </h3>
+          <p className="text-sm text-[#A2B4C0] line-clamp-3 mb-4">
+            {p.description}
+          </p>
         </div>
-        <div className="mt-3">
-          <button
-            onClick={() => onAdd(p)}
-            aria-label={`أضف ${p.title} للسلة`}
-            className="w-full py-2 rounded-md text-white font-medium"
-            style={{ background: 'var(--color-strong)' }}
-          >
-            أضف للسلة
-          </button>
+
+        <div className="flex items-center justify-between mt-auto">
+          {/* التقييم */}
+          <div className="flex items-center gap-1 text-[#FFD700]">
+            <Star size={18} />
+            <span className="text-sm">{p.rating ?? 4.0}</span>
+          </div>
+
+          {/* أزرار التفاصيل والسلة */}
+          <div className="flex gap-2">
+            <Link
+              href={`/category/${encodeURIComponent(p.category)}/${p.id}`}
+              className="
+                flex items-center gap-1 px-4 py-2 
+                bg-[#415A77] text-[#E0E1DD] rounded-full 
+                hover:bg-[#D8C2A7] hover:text-[#0D1B2A]
+                transition-colors duration-300
+              "
+            >
+              <Info size={16} />
+              تفاصيل
+            </Link>
+            <button
+              onClick={() => onAdd(p)}
+              aria-label={`أضف ${p.title} للسلة`}
+              className="
+                flex items-center gap-1 px-4 py-2
+                bg-[#D8C2A7] text-[#0D1B2A] rounded-full
+                hover:bg-[#415A77] hover:text-[#D8C2A7]
+                transition-all duration-300
+              "
+            >
+              <ShoppingCart size={16} />
+              أضف للسلة
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
 function FeaturedProducts({ products, onAdd }) {
   return (
     <section aria-label="Featured Products" className="mt-12">
@@ -770,6 +823,7 @@ function NewsletterSignup() {
           {done && <div className="text-sm text-green-600">تم التسجيل — تحقق من بريدك</div>}
         </div>
       </div>
+
     </section>
   );
 }
@@ -925,7 +979,7 @@ export default function Page() {
     // عرض toast فقط (لا تواصل للسيرفر هنا)
     setToastItem(item);
   }
-
+  
   return (
     <>
     
@@ -961,7 +1015,7 @@ export default function Page() {
               window.location.href = '#featured';
             }}
             onSecondaryCTA={() => {
-              window.scrollTo({ top: 700, behavior: 'smooth' });
+              window.scrollTo({ top: 7000, behavior: 'smooth' });
             }}
           />
 
@@ -994,6 +1048,7 @@ export default function Page() {
           {/* FOOTER PREVIEWS */}
           <FooterPreviews />
         </div>
+      
 
         {/* Toast */}
         <Toast item={toastItem} onClose={() => setToastItem(null)} />

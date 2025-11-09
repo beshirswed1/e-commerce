@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { X, Menu } from "lucide-react";
 import CategoryItem from "./CategoryItem";
+import Navbar from "../Navbar";
 
 export default function Sidebar() {
   const [categories, setCategories] = useState([]);
@@ -34,6 +35,8 @@ export default function Sidebar() {
 
   return (
     <>
+
+
       {/* 🔘 زر الفتح للجوال */}
       <button
         onClick={() => setIsOpen(true)}

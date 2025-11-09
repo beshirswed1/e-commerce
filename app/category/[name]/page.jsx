@@ -37,7 +37,7 @@ const CategoryPage = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0D1B2A] text-[#E0E1DD]">
+      <div className="flex items-center justify-center min-h-screen bg-[#E0E1DD] text-[#0D1B2A]">
         <div className="animate-pulse text-center">
           <div className="w-16 h-16 border-4 border-t-[#D8C2A7] border-[#A2B4C0] rounded-full animate-spin mx-auto"></div>
           <p className="mt-4 text-xl font-semibold">جاري تحميل المنتجات...</p>
@@ -47,9 +47,9 @@ const CategoryPage = () => {
 
   if (error)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0D1B2A] text-center text-[#E0E1DD]">
-        <div className="bg-[#1B263B] p-8 rounded-2xl shadow-2xl">
-          <h2 className="text-2xl font-bold text-[#D8C2A7] mb-3">
+      <div className="flex items-center justify-center min-h-screen bg-[#E0E1DD] text-center text-[#0D1B2A]">
+        <div className="bg-[#D8C2A7] p-8 rounded-2xl shadow-2xl">
+          <h2 className="text-2xl font-bold text-[#1B263B] mb-3">
             ❌ خطأ في التحميل ❌
           </h2>
           <p>تحقق من اتصالك بالإنترنت ثم أعد المحاولة.</p>
@@ -67,7 +67,7 @@ const CategoryPage = () => {
   });
 
   const ProductCard = ({ product }) => (
-    <div className="relative bg-[#1B263B] rounded-3xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 border border-[#415A77]/30 group cursor-pointer">
+    <div className="relative mt-14 bg-[#1B263B] rounded-3xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-2 border border-[#415A77]/30 group cursor-pointer">
       {/* صورة المنتج */}
       <div className="relative h-64 flex items-center justify-center bg-[#E0E1DD] overflow-hidden">
         <img
@@ -104,17 +104,17 @@ const CategoryPage = () => {
           <div className="flex gap-2">
             <Link
               href={`/category/${encodeURIComponent(product.category)}/${product.id}`}
-              className="flex items-center gap-1 px-3 py-2 bg-[#415A77] text-[#E0E1DD] rounded-full hover:bg-[#D8C2A7] hover:text-[#0D1B2A] transition-colors duration-300"
+              className="flex items-center gap-1 px-8 py-3 bg-[#415A77] text-[#E0E1DD] rounded-full hover:bg-[#D8C2A7] hover:text-[#0D1B2A] transition-colors duration-300"
             >
               <Info size={16} />
               تفاصيل
             </Link>
             <button
               onClick={() => addToCart(product.id.toString())}
-              className="flex items-center gap-1 px-3 py-2 bg-[#D8C2A7] text-[#0D1B2A] rounded-full hover:bg-[#E0E1DD] hover:text-[#1B263B] transition-all duration-300"
+              className="flex items-center gap-1 px-2 py-3 bg-[#D8C2A7] text-[#0D1B2A] rounded-full hover:bg-[#415A77] hover:text-[#D8C2A7] transition-all duration-300"
             >
               <ShoppingCart size={16} />
-              سلة
+              اضف الى  السلة 
             </button>
           </div>
         </div>
@@ -123,10 +123,10 @@ const CategoryPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#0D1B2A] text-[#E0E1DD] px-4 md:px-8 lg:px-12 py-10 overflow-x-hidden">
+    <div className="min-h-screen bg-[#E0E1DD] text-[#0D1B2A] px-4 md:px-8 lg:px-12 py-10 overflow-x-hidden ">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
-        <div className="md:w-1/4 w-full sticky top-8 self-start">
+        <div className="md:w-1/4 w-full sticky top-8 self-start flex fixed">
           <Filter
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

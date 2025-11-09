@@ -18,7 +18,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#B7C7D6] shadow-md sticky top-0 z-50 px-6 md:px-16 lg:px-32 py-3 flex justify-between items-center">
+<nav className="bg-[#B7C7D6] mb-8 shadow-md fixed w-full top-0 z-[150] px-6 md:px-16 lg:px-32 py-3 flex justify-between items-center">
       {/* Logo */}
       <h1
         className="font-bold text-xl text-black cursor-pointer select-none"
