@@ -60,7 +60,7 @@ export default function ProfilePage() {
         </h1>
 
         <div className="space-y-3 text-[#14273E] border-b border-[#B7C7D6] pb-5">
-          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Name:</strong> {user.username}</p>
           <p><strong>Email:</strong> {user.email}</p>
         </div>
 
