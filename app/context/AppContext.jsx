@@ -8,32 +8,40 @@ export const useAppContext = () => useContext(AppContext);
 export const AppContextProvider = ({ children }) => {
   const router = useRouter();
 
-  //  بيانات السلة
+  // بيانات السلة
   const [cartItems, setCartItems] = useState({});
 
-  //  المستخدم الحالي
+  // المستخدم الحالي
   const [user, setUser] = useState(null);
 
-  //  تحميل بيانات المستخدم من localStorage
+  // تحميل بيانات المستخدم والسلة من localStorage عند أول تشغيل
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
+    const savedCart = localStorage.getItem("cartItems");
+
     if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedCart) setCartItems(JSON.parse(savedCart));
   }, []);
 
-  //  حفظ المستخدم لما يتغير
+  // حفظ المستخدم لما يتغير
   useEffect(() => {
     if (user) localStorage.setItem("user", JSON.stringify(user));
     else localStorage.removeItem("user");
   }, [user]);
 
-  //  إضافة للسلة
+  // حفظ السلة لما تتغير
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // إضافة للسلة
   const addToCart = (itemId) => {
     const cartData = { ...cartItems };
     cartData[itemId] = (cartData[itemId] || 0) + 1;
     setCartItems(cartData);
   };
 
-  //  تعديل الكمية أو الحذف
+  // تعديل الكمية أو الحذف
   const updateCartQuantity = (itemId, quantity) => {
     const cartData = { ...cartItems };
     if (quantity === 0) delete cartData[itemId];
@@ -46,15 +54,16 @@ export const AppContextProvider = ({ children }) => {
 
   const getCartAmount = () => 0;
 
-  //  تسجيل الدخول
+  // تسجيل الدخول
   const login = (userData) => {
     setUser(userData);
     router.push("/");
   };
 
-  //  تسجيل الخروج
+  // تسجيل الخروج
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("cartItems"); // نفضي السلة وقت تسجيل الخروج (اختياري)
     router.push("/login");
   };
 
@@ -72,5 +81,5 @@ export const AppContextProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={value}>{children}</AppContext.Provider>
- );
+  );
 };
