@@ -3,15 +3,15 @@ import { useAppContext } from "../context/AppContext";
 import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
-  const { user, cartItems } = useAppContext();
+  const { user, cartItems, logout } = useAppContext(); 
   const [productsData, setProductsData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((data) => {
-        // تحويل البيانات لمفتاح حسب id
         const productsMap = {};
         data.forEach((p) => {
           productsMap[p.id] = { name: p.title, price: p.price, image: p.image };
@@ -29,8 +29,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-[#14273E] flex justify-center items-center">
         <div className="text-center text-[#fff] space-y-4">
-          <h1 className="text-3xl font-bold text-white"> لم تقم بتسجيل الدخول</h1>
-          <p>من فضلك قم بتسجيل الدخول أولًا لعرض الملف الشخصي والسلة.</p>
+          <h1 className="text-3xl font-bold tex"> You are not logged in</h1>
+          <p>Please login first to view your profile and cart.</p>
         </div>
       </div>
     );
@@ -39,7 +39,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#14273E] flex justify-center items-center text-[#E6CBA8]">
-         .....
+        <p className="text-xl animate-pulse">Loading ...</p>
       </div>
     );
   }
@@ -51,21 +51,22 @@ export default function ProfilePage() {
   }, 0);
 
   return (
-    <div className="min-h-screen bg-[#14273E] py-12 px-4 flex justify-center items-start">
-      <div className="w-full max-w-3xl bg-[#B7C7D6] rounded-2xl shadow-2xl p-8 space-y-8">
+    <div className="min-h-screen bg-[#14273E] pt-24 px-4 flex flex-col items-center gap-6">
 
+      {/* الكارد */}
+      <div className="w-full max-w-3xl bg-[#B7C7D6] rounded-2xl shadow-2xl p-8 space-y-8 flex flex-col">
         <h1 className="text-4xl font-bold text-center text-[#14273E] mb-8">
-           Profile 
+          Profile
         </h1>
 
         <div className="space-y-3 text-[#14273E] border-b border-[#B7C7D6] pb-5">
-          <p><strong>الاسم:</strong> {user.name}</p>
-          <p><strong>البريد الإلكتروني:</strong> {user.email}</p>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
         </div>
 
-        <h2 className="text-2xl font-semibold text-[#14273E] mb-4">منتجات السلة </h2>
+        <h2 className="text-2xl font-semibold text-[#14273E] mb-4"> Cart Items</h2>
         {cartList.length > 0 ? (
-          <div className="bg-[#fff] p-4 rounded-xl shadow-inner space-y-3 max-h-64 overflow-y-auto">
+          <div className="bg-white p-4 rounded-xl shadow-inner space-y-3 max-h-64 overflow-y-auto">
             {cartList.map(([id, quantity]) => {
               const product = productsData[id];
               if (!product) return null;
@@ -83,14 +84,24 @@ export default function ProfilePage() {
             })}
           </div>
         ) : (
-          <p className="text-[#14273E]/80">لا توجد منتجات في السلة حاليًا.</p>
+          <p className="text-[#14273E]/80">Your cart is empty.</p>
         )}
 
         {cartList.length > 0 && (
           <div className="text-right text-xl font-bold text-[#14273E]">
-            الإجمالي الكلي: ${totalAmount.toFixed(2)}
+            Total: ${totalAmount.toFixed(2)}
           </div>
         )}
+      </div>
+
+      {/* زر الخروج تحت الكارد على يسار الكارد */}
+      <div className="w-full max-w-3xl flex justify-start">
+        <button
+          onClick={() => logout()}
+          className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

@@ -1,105 +1,85 @@
 "use client";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaUserPlus } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
 
-export default function SignUpPage() {
-  const { login } = useAppContext();
+export default function SignUp() {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
+  const { login } = useAppContext();
 
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
-    setSuccess("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
-    // تحقق من تطابق الباسورد
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
+      setError("Passwords do not match.");
       return;
     }
 
-    // تحقق من قوة الباسورد
-    const passwordRegex = /^(?=.[A-Za-z])(?=.\d).{6,}$/; 
-    if (!passwordRegex.test(formData.password)) {
-      setError(
-        "Password must be at least 6 characters, include letters and numbers."
-      );
-      return;
-    }
+    const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    const existingUser = registeredUsers.find((u) => u.email === formData.email);
 
-    // استرجاع المستخدمين المسجلين
-    const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
-
-    // التحقق إن الإيميل مش متسجل قبل كده
-    const existingUser = users.find((u) => u.email === formData.email);
     if (existingUser) {
-      setError("This email is already registered. Please login instead.");
+      setError("This email is already registered. Please log in.");
       return;
     }
 
-    // حفظ المستخدم الجديد
-    const updatedUsers = [...users, formData];
+    // حفظ المستخدم الجديد بدون أي شروط للباسورد
+    const updatedUsers = [...registeredUsers, formData];
     localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
 
-    // تسجيل الدخول تلقائي
+    // تسجيل الدخول مباشرة
     login(formData);
 
-    // رسالة نجاح
-    setSuccess("🎉 Account created successfully! Redirecting to login...");
-    setTimeout(() => router.push("/login"), 2000);
+    toast.success("Account created successfully 🎉");
+
+    // تحويل المستخدم للصفحة الرئيسية
+    router.push("/");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#14273E] px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-[#B7C7D6]"
-      >
-        <h2 className="text-3xl font-bold text-center text-[#14273E] mb-6">
-          Create an Account
+    <div className="flex justify-center items-center min-h-screen bg-[#14273E]">
+      <div className="bg-[#B7C7D6] p-8 rounded-2xl shadow-2xl w-[90%] max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6 text-[#14273E] flex justify-center items-center gap-2">
+          <FaUserPlus className="text-[#E6CBA8]" /> Create Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            name="name"
+            name="username"
             placeholder="Full Name"
-            value={formData.name}
+            value={formData.username}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-[#B7C7D6] rounded-lg bg-[#B7C7D6]/20 focus:ring-2 focus:ring-[#14273E]"
+            className="w-full p-3 border border-[#E6CBA8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E6CBA8] bg-white"
           />
 
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-[#B7C7D6] rounded-lg bg-[#B7C7D6]/20 focus:ring-2 focus:ring-[#14273E]"
+            className="w-full p-3 border border-[#E6CBA8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E6CBA8] bg-white"
           />
 
           <input
@@ -108,8 +88,7 @@ export default function SignUpPage() {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-[#B7C7D6] rounded-lg bg-[#B7C7D6]/20 focus:ring-2 focus:ring-[#14273E]"
+            className="w-full p-3 border border-[#E6CBA8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E6CBA8] bg-white"
           />
 
           <input
@@ -118,16 +97,16 @@ export default function SignUpPage() {
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-[#B7C7D6] rounded-lg bg-[#B7C7D6]/20 focus:ring-2 focus:ring-[#14273E]"
+            className="w-full p-3 border border-[#E6CBA8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E6CBA8] bg-white"
           />
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          {success && <p className="text-green-600 text-sm text-center">{success}</p>}
+          {error && (
+            <p className="text-center text-red-600 text-sm font-semibold">{error}</p>
+          )}
 
           <button
             type="submit"
-            className="bg-[#E6CBA8] text-[#14273E] font-semibold py-2 rounded-lg hover:bg-[#B7C7D6] transition-all duration-200"
+            className="w-full bg-[#E6CBA8] text-[#14273E] py-3 rounded-lg font-semibold hover:bg-[#d6b78f] transition"
           >
             Sign Up
           </button>
@@ -142,7 +121,7 @@ export default function SignUpPage() {
             Login
           </span>
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 }
