@@ -32,37 +32,39 @@ export default function SignUpPage() {
     setError("");
     setSuccess("");
 
-    //  تحقق من تطابق الباسورد
+    // تحقق من تطابق الباسورد
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
 
-    //  تحقق من قوة الباسورد
-    const passwordRegex = /^(?=.[A-Za-z])(?=.\d).{6,}$/;
+    // تحقق من قوة الباسورد
+    const passwordRegex = /^(?=.[A-Za-z])(?=.\d).{6,}$/; 
     if (!passwordRegex.test(formData.password)) {
-      setError("Password must be at least 6 characters, include letters and numbers.");
+      setError(
+        "Password must be at least 6 characters, include letters and numbers."
+      );
       return;
     }
 
-    //  استرجاع المستخدمين الموجودين من localStorage
+    // استرجاع المستخدمين المسجلين
     const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
-    //  التحقق إن الإيميل مش متسجل قبل كده
+    // التحقق إن الإيميل مش متسجل قبل كده
     const existingUser = users.find((u) => u.email === formData.email);
     if (existingUser) {
       setError("This email is already registered. Please login instead.");
       return;
     }
 
-    //  حفظ المستخدم الجديد
+    // حفظ المستخدم الجديد
     const updatedUsers = [...users, formData];
     localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
 
-    //  تسجيل الدخول تلقائي (اختياري)
+    // تسجيل الدخول تلقائي
     login(formData);
 
-    //  رسالة نجاح
+    // رسالة نجاح
     setSuccess("🎉 Account created successfully! Redirecting to login...");
     setTimeout(() => router.push("/login"), 2000);
   };
@@ -141,6 +143,6 @@ export default function SignUpPage() {
           </span>
         </p>
       </motion.div>
-    </div>
-  );
+    </div>
+  );
 }
