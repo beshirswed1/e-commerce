@@ -574,7 +574,6 @@ export  function ProductCard({ p, onAdd }) {
             <Star size={18} />
             <span className="text-sm">{p.rating ?? 4.0}</span>
           </div>
-
           {/* أزرار التفاصيل والسلة */}
           <div className="flex gap-2">
             <Link
