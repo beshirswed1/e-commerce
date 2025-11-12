@@ -1,9 +1,11 @@
 "use client";
+import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#14273E] px-4 flex justify-center items-center">
+      <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

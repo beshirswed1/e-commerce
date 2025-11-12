@@ -1,4 +1,5 @@
 "use client";
+import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ export default function ContactPage() {
 
   return (
     <div className="flex justify-center items-center h-screen bg-[#14273E]">
+      <Navbar/>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

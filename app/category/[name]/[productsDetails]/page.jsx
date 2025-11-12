@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAppContext } from '../../../context/AppContext';
 import { FaStar, FaRegStar, FaShareAlt, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import Navbar from "@/components/Navbar";
 
 export default function ProductsDetailsPage() {
   const params = useParams();
@@ -49,6 +50,7 @@ export default function ProductsDetailsPage() {
         url: window.location.href,
       });
     } else {
+      
       navigator.clipboard.writeText(window.location.href);
       toast.success("تم نسخ رابط المنتج");
     }
@@ -103,7 +105,7 @@ export default function ProductsDetailsPage() {
       </div>
     );
 
-  return (
+  return (<><Navbar />
     <main className="min-h-screen mt-14 bg-gradient-to-b from-[#F3EEE8] to-[#E8E3DD] flex flex-col items-center p-6">
       {/* Breadcrumb */}
       <nav className="self-start mb-4 text-sm text-[#A2B4C0] flex gap-2">
@@ -181,6 +183,6 @@ export default function ProductsDetailsPage() {
           </div>
         </div>
       </section>
-    </main>
+    </main></>
   );
 }

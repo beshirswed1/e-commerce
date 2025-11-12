@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, Send } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export default function HelpPage() {
     const faqs = [
@@ -54,7 +55,7 @@ export default function HelpPage() {
 
     return (
         <div className="min-h-screen bg-[#14273E] text-white flex flex-col items-center justify-start py-20 px-6">
-            {/* Header */}
+            {/* Header */}<Navbar/>
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -66,6 +66,11 @@ export const AppContextProvider = ({ children }) => {
     localStorage.removeItem("cartItems"); // نفضي السلة وقت تسجيل الخروج (اختياري)
     router.push("/login");
   };
+// تفريغ السلة بالكامل
+const clearCart = () => {
+  setCartItems({});
+  localStorage.removeItem("cartItems");
+};
 
   const value = {
     cartItems,
@@ -77,6 +82,7 @@ export const AppContextProvider = ({ children }) => {
     login,
     logout,
     setUser,
+    clearCart,
   };
 
   return (

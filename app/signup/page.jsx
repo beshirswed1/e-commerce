@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FaUserPlus } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { useAppContext } from "@/context/AppContext";
+import Navbar from "@/components/Navbar";
 
 export default function SignUp() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#14273E]">
+    <div className="flex justify-center items-center min-h-screen bg-[#14273E]"><Navbar/>
       <div className="bg-[#B7C7D6] p-8 rounded-2xl shadow-2xl w-[90%] max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6 text-[#14273E] flex justify-center items-center gap-2">
           <FaUserPlus className="text-[#E6CBA8]" /> Create Account

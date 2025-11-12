@@ -13,14 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 export const metadata = {
-  title: "استدعاء | متجر الأثاث الفاخر والديكور العصري",
-  description: "استدعاء هو وجهتك الأولى للأثاث الفاخر والديكور العصري بجودة عالية وأسعار تنافسية. اكتشف تشكيلتنا الراقية اليوم.",
+  title: " متجر الأثاث الفاخر والديكور العصري",
+  description: " هو وجهتك الأولى للأثاث الفاخر والديكور العصري بجودة عالية وأسعار تنافسية. اكتشف تشكيلتنا الراقية اليوم.",
   keywords: ["أثاث فاخر", "ديكور راقي", "غرف نوم", "أثاث عصري", "استدعاء", "Furniture", "Luxury Home Decor", "Modern Design"],
   openGraph: {
-    title: "استدعاء — متجر الأثاث والديكور الفاخر",
+    title: " متجر الأثاث والديكور الفاخر",
     description: "تصفح تشكيلتنا الواسعة من الأثاث العصري والديكور الراقي.",
     url: "https://e-commerce-seven-blue-67.vercel.app",
-    siteName: "استدعاء",
+    siteName: "DECOR",
     images: [
       {
         url: "https://images.unsplash.com/photo-1617806265182-7b3f847f0b75?ixlib=rb-4.1.0&auto=format&fit=crop&w=1200&h=630&q=90",
@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <AppContextProvider>
-          <Navbar />
+          
           {children}
         </AppContextProvider>
       </body>

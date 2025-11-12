@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAppContext } from "../../context/AppContext";
 import { ShoppingCart, Info, Star } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const CategoryPage = () => {
   const params = useParams();
@@ -124,9 +125,9 @@ const CategoryPage = () => {
 
   return (
     <div className="min-h-screen bg-[#E0E1DD] text-[#0D1B2A] px-4 md:px-8 lg:px-12 py-10 overflow-x-hidden ">
+        {/* Sidebar */}<Navbar/>
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar */}
-        <div className="md:w-1/4 w-full sticky top-8 self-start flex fixed">
+        <div className="md:w-1/4 w-full sticky top-8 self-start flex ">
           <Filter
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

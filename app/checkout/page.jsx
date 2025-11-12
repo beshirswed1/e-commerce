@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { CreditCard, Wallet, Banknote, HandCoins, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '@/components/Navbar';
 
 const CheckoutPage = () => {
     const { cartItems } = useAppContext();
@@ -50,10 +51,11 @@ const CheckoutPage = () => {
     const handlePaymentSelect = method => {
         setFormData(prev => ({ ...prev, payment: method }));
     };
-
-    const handleSubmit = e => {
+const{clearCart} = useAppContext();
+    const handleSubmit = (e) => {
         e.preventDefault();
         alert('تم تأكيد الطلب بنجاح ✅');
+        clearCart();
     };
 
     // ✅ التحقق قبل الانتقال
@@ -98,7 +100,8 @@ const CheckoutPage = () => {
     const steps = ['البيانات', 'الدفع', 'تأكيد الطلب'];
 
     return (
-        <div className="min-h-screen bg-[#14273E] p-6">
+        <div className="min-h-screen bg-[#14273E] p-6 mt-16">
+            <Navbar />
             <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
                 <h1 className="text-3xl font-bold mb-8 text-[#14273E] text-center">إتمام الشراء</h1>
 
