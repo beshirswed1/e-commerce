@@ -21,7 +21,7 @@ import Sidebar from "./components/Sidebar";
 
     export default function RootLayout({ children }) {
     return (
-        <html lang="ar">
+        <html lang="ar" dir="rtl">
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#de7e7e] text-white`}
         >
