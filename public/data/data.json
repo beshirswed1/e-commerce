@@ -1,0 +1,40 @@
+    {
+    "sidebarItems": [
+        {
+        "name": "Dashboard Home",
+        "href": "/admin/dashboard",
+        "icon": "House",
+        "description": "عرض نظرة عامة على الإحصائيات الأساسية للنظام."
+        },
+        {
+        "name": "Products Management",
+        "href": "/admin/products",
+        "icon": "ShoppingBag",
+        "description": "عرض المنتجات وإدارتها (إضافة، تعديل، حذف)."
+        },
+        {
+        "name": "Add/Edit Product",
+        "href": "/admin/products/edit",
+        "icon": "Settings",
+        "description": "صفحة أو مودال لتعديل أو إضافة منتج جديد."
+        },
+        {
+        "name": "Orders Management",
+        "href": "/admin/orders",
+        "icon": "ShoppingCart",
+        "description": "عرض الطلبات وإدارة حالتها."
+        },
+        {
+        "name": "Users Management",
+        "href": "/admin/users",
+        "icon": "Users",
+        "description": "إدارة المستخدمين (حظر، ترقية، حذف)."
+        },
+        {
+        "name": "Admin Login",
+        "href": "/admin/login",
+        "icon": "Mail",
+        "description": "تسجيل الدخول للوحة التحكم."
+        }
+    ]
+    }
