@@ -1,9 +1,12 @@
 'use client';
-import { useAppContext } from "../context/AppContext";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/userSlice";
 import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
-  const { user, cartItems, logout } = useAppContext(); 
+const dispatch = useDispatch();
+const user = useSelector((state) => state.user.user);
+const cartItems = useSelector((state) => state.cart.items);
   const [productsData, setProductsData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -97,7 +100,8 @@ export default function ProfilePage() {
       {/* زر الخروج تحت الكارد على يسار الكارد */}
       <div className="w-full max-w-3xl flex justify-start">
         <button
-          onClick={() => logout()}
+          onClick={() => dispatch(logout())}
+
           className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition"
         >
           Logout

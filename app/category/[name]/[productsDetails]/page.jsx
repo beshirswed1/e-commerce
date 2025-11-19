@@ -1,8 +1,9 @@
 "use client";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../../redux/slices/cartSlice";
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAppContext } from '../../../context/AppContext';
 import { FaStar, FaRegStar, FaShareAlt, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
@@ -10,9 +11,8 @@ import Navbar from "@/components/Navbar";
 export default function ProductsDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const { addToCart } = useAppContext();
   const { productsDetails } = params;
-
+  const dispatch = useDispatch();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -38,7 +38,7 @@ export default function ProductsDetailsPage() {
   }, [productsDetails]);
 
   const handleAddToCart = () => {
-    addToCart(product.id.toString());
+dispatch(addToCart(product.id.toString()));
     toast.success("تم إضافة المنتج إلى السلة");
   };
 

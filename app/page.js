@@ -26,7 +26,8 @@ import {
   FaCcVisa, FaCcMastercard, FaCcPaypal, 
   FaPhoneAlt, FaQuestionCircle, FaStore, FaTruck 
 } from "react-icons/fa";
-import { useAppContext } from './context/AppContext';
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/slices/cartSlice";
 
 /* ===========================
    CSS Variables (colors)
@@ -282,11 +283,13 @@ function CategoriesGrid({ data }) {
 /* ===========================
    Featured Products
    =========================== */
-export  function ProductCard({ p }) {
-  const { addToCart } = useAppContext();
+export function ProductCard({ p }) {
+  const dispatch = useDispatch();
+
   const handleAdd = () => {
-    addToCart(p.id.toString());
-  }
+    dispatch(addToCart(p.id.toString()));
+  };
+
   return (
     <div
       className="
@@ -297,7 +300,6 @@ export  function ProductCard({ p }) {
         border border-[#415A77]/30 group cursor-pointer
       "
     >
-      {/* صورة المنتج */}
       <div className="relative h-64 flex items-center justify-center bg-[#E0E1DD] overflow-hidden">
         <Image
           src={p.image}
@@ -305,23 +307,15 @@ export  function ProductCard({ p }) {
           fill
           className="object-contain p-6 transition-transform duration-700 group-hover:scale-110"
           loading="lazy"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
-              "https://placehold.co/400x300/101F30/A2B4C0?text=No+Image";
-          }}
         />
 
-        {/* سعر المنتج */}
         <div className="absolute top-3 left-3 bg-[#D8C2A7]/80 text-[#0D1B2A] px-3 py-1 rounded-full text-sm font-semibold shadow-md">
           ${p.price.toFixed(2)}
         </div>
 
-        {/* تأثير الهوفر العلوي */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </div>
 
-      {/* تفاصيل المنتج */}
       <div className="p-5 text-[#E0E1DD] flex flex-col justify-between min-h-[230px]">
         <div>
           <h3 className="text-lg font-bold mb-2 line-clamp-2 text-[#D8C2A7]">
@@ -333,12 +327,11 @@ export  function ProductCard({ p }) {
         </div>
 
         <div className="flex items-center justify-between mt-auto">
-          {/* التقييم */}
           <div className="flex items-center gap-1 text-[#FFD700]">
             <Star size={18} />
             <span className="text-sm">{p.rating ?? 4.0}</span>
           </div>
-          {/* أزرار التفاصيل والسلة */}
+
           <div className="flex gap-2">
             <Link
               href={`/category/${encodeURIComponent(p.category)}/${p.id}`}
@@ -352,9 +345,9 @@ export  function ProductCard({ p }) {
               <Info size={16} />
               تفاصيل
             </Link>
+
             <button
               onClick={handleAdd}
-              aria-label={`أضف ${p.title} للسلة`}
               className="
                 flex items-center gap-1 px-4 py-2
                 bg-[#D8C2A7] text-[#0D1B2A] rounded-full
@@ -371,6 +364,7 @@ export  function ProductCard({ p }) {
     </div>
   );
 }
+
 function FeaturedProducts({ products, onAdd }) {
   return (
     <section aria-label="Featured Products" className="mt-12">

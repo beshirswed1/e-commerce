@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { AppContextProvider } from "./context/AppContext";
-
+import Providers from "./providers";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -46,10 +46,12 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
-        <AppContextProvider>
-          
+        {/* <AppContextProvider> */}
+          <Providers>
           {children}
-        </AppContextProvider>
+          </Providers>
+
+        {/* </AppContextProvider> */}
       </body>
     </html>
   );

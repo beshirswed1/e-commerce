@@ -3,14 +3,16 @@ import React, { useState, useEffect } from "react";
 import Filter from "@/components/sidebar/filter";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useAppContext } from "../../context/AppContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/slices/cartSlice";
+
 import { ShoppingCart, Info, Star } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const CategoryPage = () => {
   const params = useParams();
   const name = decodeURIComponent(params.name);
-  const { addToCart } = useAppContext();
+const dispatch = useDispatch();
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
@@ -111,7 +113,8 @@ const CategoryPage = () => {
               تفاصيل
             </Link>
             <button
-              onClick={() => addToCart(product.id.toString())}
+              onClick={() => dispatch(addToCart(product.id.toString()))}
+
               className="flex items-center gap-1 px-2 py-3 bg-[#D8C2A7] text-[#0D1B2A] rounded-full hover:bg-[#415A77] hover:text-[#D8C2A7] transition-all duration-300"
             >
               <ShoppingCart size={16} />

@@ -1,14 +1,23 @@
-"use client";
+'use client';
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "../context/AppContext";
+
+import { useSelector } from "react-redux";
+
 import { FaUser, FaUserPlus, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
   const router = useRouter();
-  const { user, getCartCount } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // ⬇️ جلب user من Redux Toolkit
+  const user = useSelector((state) => state.user.user);
+
+  // ⬇️ جلب السلة من Redux Toolkit
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = Object.values(cartItems).reduce((a, b) => a + b, 0);
 
   const links = [
     { title: "Home", href: "/" },
@@ -18,7 +27,8 @@ const Navbar = () => {
   ];
 
   return (
-<nav className="bg-[#B7C7D6] mb-8 shadow-md fixed w-full top-0 z-[150] px-6 md:px-16 lg:px-32 py-3 flex justify-between items-center">
+    <nav className="bg-[#B7C7D6] mb-8 shadow-md fixed w-full top-0 z-[150] px-6 md:px-16 lg:px-32 py-3 flex justify-between items-center">
+
       {/* Logo */}
       <h1
         className="font-bold text-xl text-black cursor-pointer select-none"
@@ -42,15 +52,17 @@ const Navbar = () => {
 
       {/* Icons + Auth */}
       <div className="flex items-center gap-4">
+
         {/* Cart */}
         <button
           onClick={() => router.push("/cart")}
           className="relative flex items-center bg-[#14273E] text-[#E6CBA8] px-3 py-1.5 rounded-md hover:text-[#B7C7D6] transition-all duration-200"
         >
           <FaShoppingCart size={18} />
-          {getCartCount() > 0 && (
+
+          {cartCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-semibold px-1.5 rounded-full">
-              {getCartCount()}
+              {cartCount}
             </span>
           )}
         </button>

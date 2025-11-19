@@ -1,12 +1,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart } from "../../redux/slices/cartSlice";
 import { CreditCard, Wallet, Banknote, HandCoins, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 
 const CheckoutPage = () => {
-    const { cartItems } = useAppContext();
+const dispatch = useDispatch();
+const cartItems = useSelector((state) => state.cart.items);
     const [products, setProducts] = useState([]);
     const [step, setStep] = useState(1);
     const [error, setError] = useState('');
@@ -51,11 +53,10 @@ const CheckoutPage = () => {
     const handlePaymentSelect = method => {
         setFormData(prev => ({ ...prev, payment: method }));
     };
-const{clearCart} = useAppContext();
     const handleSubmit = (e) => {
         e.preventDefault();
         alert('تم تأكيد الطلب بنجاح ✅');
-        clearCart();
+dispatch(clearCart());
     };
 
     // ✅ التحقق قبل الانتقال

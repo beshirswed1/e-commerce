@@ -2,13 +2,14 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/userSlice";
 
 export default function LoginPage() {
-  const { login } = useAppContext();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,8 +28,10 @@ export default function LoginPage() {
     }
 
     if (email === savedUser.email && password === savedUser.password) {
-      login(savedUser);
-      alert(" Login successful!");
+dispatch(login(savedUser));
+alert("Login successful!");
+router.push("/");
+
     } else {
       setError("Incorrect email or password!");
     }

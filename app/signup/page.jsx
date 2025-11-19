@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaUserPlus } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import { useAppContext } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/userSlice";
+
 
 export default function SignUp() {
   const router = useRouter();
-  const { login } = useAppContext();
+const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -49,7 +51,7 @@ export default function SignUp() {
     localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
 
     // تسجيل الدخول مباشرة
-    login(formData);
+dispatch(login(formData));
 
     toast.success("Account created successfully 🎉");
 
