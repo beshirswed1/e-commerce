@@ -44,8 +44,8 @@ export default function Sidebar() {
 
   return (
     <motion.aside
-      animate={{ width: isSidebarOpen ? 260 : 80 }}
-      transition={{ duration: 0.35, ease: "easeInOut" }}
+      animate={{ width: isSidebarOpen ? 260 : 65 }}
+      transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
       className="relative z-10 flex-shrink-0 h-screen bg-[#0D1A2A] border-r border-[#14273E] shadow-lg flex flex-col"
     >
       {/* Header & Toggle */}
@@ -78,11 +78,12 @@ export default function Sidebar() {
           return (
             <Link key={item.name} href={item.href}>
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                layout="position"
+                initial={{ opacity: 0, x: 0 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: 1.04 }}
-                className={`group flex items-center gap-4 p-3 rounded-xl mb-2 cursor-pointer transition-all
+                transition={{ duration: 0.35 }}
+                // whileHover={{ scale: 1.04 }}
+                className={`group flex items-center gap-4 p-3 rounded-xl my-2 cursor-pointer  h-[48px] transition-all
                   ${isActive
                     ? "bg-[#14273E] text-[#D8C2A7] shadow-md"
                     : "text-[#EDE7DD] hover:bg-[#14273E]/60"

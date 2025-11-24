@@ -1,40 +1,70 @@
     {
-    "sidebarItems": [
+      "sidebarItems": [
         {
-        "name": "Dashboard Home",
-        "href": "/admin/dashboard",
-        "icon": "House",
-        "description": "عرض نظرة عامة على الإحصائيات الأساسية للنظام."
+          "name": "Dashboard Home",
+          "href": "/admin/dashboard",
+          "icon": "House",
+          "description": "عرض نظرة عامة على الإحصائيات الأساسية للنظام."
         },
         {
-        "name": "Products Management",
-        "href": "/admin/products",
-        "icon": "ShoppingBag",
-        "description": "عرض المنتجات وإدارتها (إضافة، تعديل، حذف)."
+          "name": "Products Management",
+          "href": "/admin/products",
+          "icon": "ShoppingBag",
+          "description": "عرض المنتجات وإدارتها (إضافة، تعديل، حذف)."
         },
         {
-        "name": "Add/Edit Product",
-        "href": "/admin/products/edit",
-        "icon": "Settings",
-        "description": "صفحة أو مودال لتعديل أو إضافة منتج جديد."
+          "name": "Add/Edit Product",
+          "href": "/admin/products/edit",
+          "icon": "Settings",
+          "description": "صفحة أو مودال لتعديل أو إضافة منتج جديد."
         },
         {
-        "name": "Orders Management",
-        "href": "/admin/orders",
-        "icon": "ShoppingCart",
-        "description": "عرض الطلبات وإدارة حالتها."
+          "name": "Orders Management",
+          "href": "/admin/orders",
+          "icon": "ShoppingCart",
+          "description": "عرض الطلبات وإدارة حالتها."
         },
         {
-        "name": "Users Management",
-        "href": "/admin/users",
-        "icon": "Users",
-        "description": "إدارة المستخدمين (حظر، ترقية، حذف)."
+          "name": "Users Management",
+          "href": "/admin/users",
+          "icon": "Users",
+          "description": "إدارة المستخدمين (حظر، ترقية، حذف)."
         },
         {
-        "name": "Admin Login",
-        "href": "/admin/login",
-        "icon": "Mail",
-        "description": "تسجيل الدخول للوحة التحكم."
+          "name": "Admin Login",
+          "href": "/admin/login",
+          "icon": "Mail",
+          "description": "تسجيل الدخول للوحة التحكم."
         }
-    ]
+      ],
+      "stats": [
+        {
+          "id": "revenue",
+          "title": "Total Revenue",
+          "value": "$45,231.89",
+          "diff": "+20.1% from last month",
+          "icon": "DollarSign"
+        },
+        {
+          "id": "orders",
+          "title": "Orders",
+          "value": "2,345",
+          "diff": "+12.5% from last month",
+          "icon": "ShoppingCart"
+        },
+        {
+          "id": "customers",
+          "title": "Customers",
+          "value": "1,234",
+          "diff": "+8.2% from last month",
+          "icon": "Users"
+        },
+        {
+          "id": "products",
+          "title": "Products",
+          "value": "567",
+          "diff": "+4 new this week",
+          "icon": "Package"
+        }
+      ]
     }
