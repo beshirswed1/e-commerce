@@ -21,8 +21,8 @@ import Sidebar from "./components/Sidebar";
 
     export default function RootLayout({ children }) {
     return (
-        <html lang="en" dir="ltr" >
-        <body className="${geistSans.variable} ${geistMono.variable} antialiased bg-[#f0ebe5] " >
+        <html lang="ar" dir="rtl" >
+        <body className=" ${geistSans.variable} ${geistMono.variable} antialiased bg-[#f0ebe5] " >
             <div className="flex h-screen overflow-hidden">
             {/* Sidebar Component */}
             <Sidebar />

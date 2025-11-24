@@ -5,8 +5,8 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 export default function SalesOverview({ data }) {
     return (
         <div className="w-full p-5 bg-white rounded-xl shadow-sm border mb-6">
-            <h2 className="font-semibold mb-2">Sales Overview</h2>
-            <p className="text-gray-500 text-sm mb-4">Monthly sales performance</p>
+            <h2 className="font-semibold mb-2">ملخص المبيعات</h2>
+            <p className="text-gray-500 text-sm mb-4">إحصائيات المبيعات خلال الشهر</p>
 
             <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">

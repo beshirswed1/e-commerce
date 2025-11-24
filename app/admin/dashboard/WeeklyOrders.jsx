@@ -5,8 +5,8 @@
     export default function WeeklyOrders({ data }) {
         return (
             <div className="w-full p-5 bg-white rounded-xl shadow-sm border mb-6">
-                <h2 className="font-semibold mb-2">Weekly Orders</h2>
-                <p className="text-gray-500 text-sm mb-4">Orders By day of week</p>
+                <h2 className="font-semibold mb-2">إحصائيات الطلبات أسبوعياً</h2>
+                <p className="text-gray-500 text-sm mb-4">عدد الطلبات حسب أيام الأسبوع</p>
     
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
