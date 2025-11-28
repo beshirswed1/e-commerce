@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
-const API_BASE = 'https://localhost:7118/api';
+const API_BASE = 'https://fakestoreapi.com/products';
 
 export default function ProductsManagement() {
   const [products, setProducts] = useState([]);

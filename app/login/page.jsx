@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { useDispatch } from "react-redux";
-import { login } from "@/redux/slices/userSlice";
+import { login } from "../../redux/slices/userSlice";
 
 export default function LoginPage() {
   const router = useRouter();

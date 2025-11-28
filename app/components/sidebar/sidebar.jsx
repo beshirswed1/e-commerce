@@ -106,9 +106,9 @@ export default function Sidebar() {
               <CategoryItem
                 key={index}
                 name={cat}
-                hoverColor="#E6CBA8"
+                hoverColor="#000000"
                 textColor="#3A3A3A"
-                borderColor="#E6CBA8"
+                borderColor="#000000"
                 style={{
                   fontSize: "0.85rem",
                   padding: "6px 10px",

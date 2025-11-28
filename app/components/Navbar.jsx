@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 
 import { useSelector } from "react-redux";
 
-import { FaUser, FaUserPlus, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
-
+import {
+  FaUser,
+  FaUserPlus,
+  FaShoppingCart,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+const logo = "/LOGO.jpg";
 const Navbar = () => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,17 +34,16 @@ const Navbar = () => {
 
   return (
     <nav className="bg-[#B7C7D6] mb-8 shadow-md fixed w-full top-0 z-[150] px-6 md:px-16 lg:px-32 py-3 flex justify-between items-center">
-
       {/* Logo */}
       <h1
         className="font-bold text-xl text-black cursor-pointer select-none"
         onClick={() => router.push("/")}
       >
-        Logo
+        <img src={logo} alt="Logo" className="h-8" />
       </h1>
 
       {/* Desktop Links */}
-      <div className="hidden md:flex items-center gap-6 text-[#E6CBA8]">
+      <div className="hidden md:flex items-center gap-6 text-[#E6C7D68] font-medium">
         {links.map((link) => (
           <Link
             key={link.href}
@@ -52,7 +57,6 @@ const Navbar = () => {
 
       {/* Icons + Auth */}
       <div className="flex items-center gap-4">
-
         {/* Cart */}
         <button
           onClick={() => router.push("/cart")}
@@ -124,7 +128,10 @@ const Navbar = () => {
           {!user ? (
             <>
               <button
-                onClick={() => { router.push("/login"); setMenuOpen(false); }}
+                onClick={() => {
+                  router.push("/login");
+                  setMenuOpen(false);
+                }}
                 className="w-full py-2 bg-[#14273E] text-[#E6CBA8] rounded-md flex items-center justify-center gap-2"
               >
                 <FaUser size={18} />
@@ -132,7 +139,10 @@ const Navbar = () => {
               </button>
 
               <button
-                onClick={() => { router.push("/signup"); setMenuOpen(false); }}
+                onClick={() => {
+                  router.push("/signup");
+                  setMenuOpen(false);
+                }}
                 className="w-full py-2 bg-[#14273E] text-[#E6CBA8] rounded-md flex items-center justify-center gap-2"
               >
                 <FaUserPlus size={18} />
@@ -141,7 +151,10 @@ const Navbar = () => {
             </>
           ) : (
             <button
-              onClick={() => { router.push("/profile"); setMenuOpen(false); }}
+              onClick={() => {
+                router.push("/profile");
+                setMenuOpen(false);
+              }}
               className="w-full py-2 bg-[#14273E] text-[#E6CBA8] rounded-md flex items-center justify-center gap-2"
             >
               <FaUser size={18} />
