@@ -1,242 +1,220 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import axios from 'axios';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPlus, FaLayerGroup } from 'react-icons/fa';
 
-const API_BASE = 'https://fakestoreapi.com/products';
+// Redux Actions
+import { 
+  fetchProducts, 
+  fetchCategories, 
+  deleteProduct, 
+  addProduct, 
+  updateProduct
+} from '../../../redux/slices/productSlice';
+
+// Components
+import ProductCard from '../components/ProductCard';
+import ProductForm from '../components/ProductForm';
+import FilterBar from '../components/FilterBar';
 
 export default function ProductsManagement() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    shortDescription: '',
-    price: '',
-    quantity: '',
-    categoryID: '',
-    isPublished: true
-  });
-  const [editingProductId, setEditingProductId] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const dispatch = useDispatch();
+  const { products, categories, loading, error } = useSelector((state) => state.product);
 
+  // Local State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' | 'desc'
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  // Initial Fetch
   useEffect(() => {
-    fetchCategories();
-    fetchProducts();
-  }, []);
+    dispatch(fetchProducts());
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get(`${API_BASE}/Categories?languageCode=ar&isActive=true`);
-      setCategories(res.data.data || []);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
+  // Filtering & Sorting Logic
+  const processedProducts = useMemo(() => {
+    let result = [...products];
+
+    // 1. Search
+    if (searchTerm) {
+      result = result.filter(p => 
+        p.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-  };
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_BASE}/Product?languageCode=ar`);
-      setProducts(res.data.data || []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+    // 2. Filter
+    if (categoryFilter) {
+      result = result.filter(p => p.category === categoryFilter);
     }
-  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingProductId) {
-        await axios.put(`${API_BASE}/Product/${editingProductId}`, formData);
-        alert('تم تعديل المنتج بنجاح!');
-      } else {
-        await axios.post(`${API_BASE}/Product`, formData);
-        alert('تم إضافة المنتج بنجاح!');
-      }
-      setFormData({
-        title: '',
-        description: '',
-        shortDescription: '',
-        price: '',
-        quantity: '',
-        categoryID: '',
-        isPublished: true
-      });
-      setEditingProductId(null);
-      setShowForm(false);
-      fetchProducts();
-    } catch (err) {
-      console.error(err);
-      alert('حدث خطأ أثناء العملية');
-    }
-  };
-
-  const handleDelete = async (productId) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
-    try {
-      await axios.delete(`${API_BASE}/Product/${productId}`);
-      alert('تم حذف المنتج!');
-      fetchProducts();
-    } catch (err) {
-      console.error(err);
-      alert('حدث خطأ أثناء الحذف');
-    }
-  };
-
-  const handleEdit = (product) => {
-    setEditingProductId(product.productID);
-    setFormData({
-      title: product.title,
-      description: product.description,
-      shortDescription: product.shortDescription,
-      price: product.price,
-      quantity: product.quantity,
-      categoryID: product.categoryID,
-      isPublished: product.isPublished
+    // 3. Sort
+    result.sort((a, b) => {
+      return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
     });
-    setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    return result;
+  }, [products, searchTerm, categoryFilter, sortOrder]);
+
+  // Pagination Logic
+  const totalPages = Math.ceil(processedProducts.length / itemsPerPage);
+  const displayedProducts = processedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Handlers
+  const handleOpenAdd = () => {
+    setEditingProduct(null);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenEdit = (product) => {
+    setEditingProduct(product);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟')) {
+      await dispatch(deleteProduct(id));
+    }
+  };
+
+  const handleFormSubmit = async (data) => {
+    if (editingProduct) {
+      await dispatch(updateProduct({ id: editingProduct.id, data }));
+    } else {
+      await dispatch(addProduct(data));
+    }
+    setIsFormOpen(false);
   };
 
   return (
-    <div style={{ backgroundColor: '#F3EEE8', minHeight: '100vh', padding: '2rem' }}>
-      {/* Form Section */}
-      {showForm && (
-        <motion.div
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            backgroundColor: '#101F30',
-            color: '#F3EEE8',
-            borderRadius: '12px',
-            padding: '2rem',
-            marginBottom: '2rem',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
-          }}
-        >
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>
-            {editingProductId ? 'تعديل المنتج' : 'إضافة منتج جديد'}
-          </h2>
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
-            <input type="text" name="title" placeholder="اسم المنتج" value={formData.title} onChange={handleChange} required style={inputStyle} />
-            <textarea name="description" placeholder="وصف المنتج" value={formData.description} onChange={handleChange} required style={inputStyle} />
-            <input type="number" name="price" placeholder="السعر" value={formData.price} onChange={handleChange} required style={inputStyle} />
-            <input type="number" name="quantity" placeholder="الكمية" value={formData.quantity} onChange={handleChange} required style={inputStyle} />
-            <select name="categoryID" value={formData.categoryID} onChange={handleChange} required style={inputStyle}>
-              <option value="">اختر الفئة</option>
-              {categories.map(cat => <option key={cat.categoryID} value={cat.categoryID}>{cat.title}</option>)}
-            </select>
-            <button type="submit" style={buttonStyle}>{editingProductId ? 'تعديل المنتج' : 'إضافة منتج'} <FaPlus /></button>
-          </form>
-        </motion.div>
-      )}
+    <div className="min-h-screen bg-[#F3EEE8] font-sans text-[#101F30]">
+      {/* Header Section */}
+      <header className="bg-[#101F30] text-[#F3EEE8] py-12 px-6 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
+          <FaLayerGroup size={300} />
+        </div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center relative z-10">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">إدارة المنتجات</h1>
+            <p className="text-[#A2B4C0] text-lg">تحكم كامل في المخزون، الأسعار، والفئات.</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleOpenAdd}
+            className="mt-6 md:mt-0 bg-[#D8C2A7] text-[#101F30] px-8 py-4 rounded-xl font-bold flex items-center gap-3 shadow-[0_4px_14px_0_rgba(216,194,167,0.39)] hover:shadow-[0_6px_20px_rgba(216,194,167,0.23)] transition-all"
+          >
+            <FaPlus /> إضافة منتج جديد
+          </motion.button>
+        </div>
+      </header>
 
-      {/* Toggle Form Button */}
-      <button onClick={() => setShowForm(prev => !prev)} style={{ marginBottom: '2rem', ...toggleButtonStyle }}>
-        {showForm ? 'إخفاء النموذج' : 'إضافة منتج جديد'} <FaPlus />
-      </button>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-10 -mt-8">
+        
+        {/* Controls */}
+        <FilterBar 
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
+          categories={categories}
+          sortOrder={sortOrder} setSortOrder={setSortOrder}
+        />
 
-      {/* Products Grid */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        {loading ? (
-          <p>جاري التحميل...</p>
-        ) : (
-          <div style={gridStyle}>
-            {products.map(product => (
-              <motion.div key={product.productID} whileHover={{ scale: 1.05 }} style={cardStyle}>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{product.title}</h3>
-                <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>{product.shortDescription}</p>
-                <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{product.price} {product.currency}</p>
-                <p style={{ fontSize: '0.85rem', color: '#A2B4C0', marginBottom: '0.5rem' }}>الكمية: {product.quantity}</p>
-                <p style={{ fontSize: '0.85rem', color: '#A2B4C0', marginBottom: '0.5rem' }}>الفئة: {categories.find(c => c.categoryID === product.categoryID)?.title || 'غير محدد'}</p>
-                <p style={{ fontSize: '0.85rem', color: product.isPublished ? '#00FF7F' : '#FF6347', marginBottom: '0.5rem' }}>
-                  الحالة: {product.isPublished ? 'نشط' : 'غير نشط'}
-                </p>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button onClick={() => handleEdit(product)} style={editButtonStyle}><FaEdit /></button>
-                  <button onClick={() => handleDelete(product.productID)} style={deleteButtonStyle}><FaTrash /></button>
-                </div>
-              </motion.div>
-            ))}
+        {/* Loading & Error States */}
+        {loading && products.length === 0 && (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#101F30]"></div>
           </div>
         )}
-      </motion.div>
+        
+        {error && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-8" role="alert">
+            <p className="font-bold">خطأ</p>
+            <p>{error}</p>
+          </div>
+        )}
+
+        {/* Products Grid */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          <AnimatePresence>
+            {displayedProducts.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                onEdit={handleOpenEdit} 
+                onDelete={handleDelete} 
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
+        
+        {/* Empty State */}
+        {!loading && displayedProducts.length === 0 && (
+          <div className="text-center py-20 opacity-50">
+            <FaLayerGroup size={60} className="mx-auto mb-4" />
+            <p className="text-xl font-bold">لا توجد منتجات تطابق بحثك</p>
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {processedProducts.length > itemsPerPage && (
+          <div className="flex justify-center mt-12 gap-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+              className="px-4 py-2 rounded-lg bg-white border border-[#D8C2A7] text-[#101F30] disabled:opacity-50 hover:bg-[#101F30] hover:text-[#F3EEE8] transition-colors"
+            >
+              السابق
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 rounded-lg font-bold transition-all ${
+                  currentPage === page 
+                    ? 'bg-[#101F30] text-[#F3EEE8] scale-110 shadow-lg' 
+                    : 'bg-white text-[#101F30] border border-[#D8C2A7] hover:bg-[#F3EEE8]'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+              className="px-4 py-2 rounded-lg bg-white border border-[#D8C2A7] text-[#101F30] disabled:opacity-50 hover:bg-[#101F30] hover:text-[#F3EEE8] transition-colors"
+            >
+              التالي
+            </button>
+          </div>
+        )}
+      </main>
+
+      {/* Modal Form */}
+      <ProductForm 
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleFormSubmit}
+        initialData={editingProduct}
+        categories={categories}
+        isLoading={loading}
+      />
     </div>
   );
 }
-
-// Styles
-const inputStyle = {
-  padding: '0.7rem',
-  borderRadius: '8px',
-  border: '1px solid #D8C2A7',
-  fontSize: '1rem'
-};
-
-const buttonStyle = {
-  backgroundColor: '#A2B4C0',
-  color: '#101F30',
-  padding: '0.7rem',
-  borderRadius: '8px',
-  fontWeight: 'bold',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.5rem',
-  justifyContent: 'center'
-};
-
-const toggleButtonStyle = {
-  backgroundColor: '#101F30',
-  color: '#F3EEE8',
-  padding: '0.7rem 1rem',
-  borderRadius: '8px',
-  fontWeight: 'bold',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '0.5rem'
-};
-
-const gridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-  gap: '1.5rem'
-};
-
-const cardStyle = {
-  backgroundColor: '#D8C2A7',
-  color: '#101F30',
-  padding: '1rem',
-  borderRadius: '12px',
-  boxShadow: '0 6px 15px rgba(0,0,0,0.2)',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between'
-};
-
-const editButtonStyle = {
-  backgroundColor: '#A2B4C0',
-  color: '#101F30',
-  borderRadius: '6px',
-  padding: '0.5rem',
-  flex: 1
-};
-
-const deleteButtonStyle = {
-  backgroundColor: '#FF4C4C',
-  color: '#F3EEE8',
-  borderRadius: '6px',
-  padding: '0.5rem',
-  flex: 1
-};

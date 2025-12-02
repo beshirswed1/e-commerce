@@ -62,7 +62,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-
+  --geist-sans: 'Geist', sans-serif;
+  --geist-mono: 'Geist Mono', monospace;
   /* Brand Colors */
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
@@ -103,7 +104,13 @@
   --color-muted: #A2B4C0;
   --color-brown: #2B1A0F;
 }
+.geist-sans {
+  font-family: var(--geist-sans);
+}
 
+.geist-mono {
+  font-family: var(--geist-mono);
+}
 /* --- Dark Mode Variables --- */
 .dark {
   --background: oklch(0.145 0 0);

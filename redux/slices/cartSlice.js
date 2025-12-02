@@ -25,7 +25,7 @@ const cartSlice = createSlice({
     },
 
     // تفريغ السلة بالكامل
-    clearCart: (state) => {
+    clearCart: (state) => { 
       state.items = {};
       localStorage.removeItem("cartItems");
     },
