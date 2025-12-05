@@ -436,26 +436,32 @@ function     Hero({ slides, onPrimaryCTA, onSecondaryCTA }) {
     </button>
 
     {/* زر الاستلهام */}
-    <button
-      onClick={() => onSecondaryCTA && onSecondaryCTA(s)}
-      aria-label="استلهم أفكارك"
-      className="px-5 md:px-6 py-2 md:py-3 rounded-full border-2 font-semibold text-sm md:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
-      style={{
-        borderColor: "var(--color-accent)",
-        color: "var(--color-bg)",
-        background: "var(--color-accent)",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "var(--color-accent)";
-        e.currentTarget.style.color = "#fff";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "var(--color-accent)";
-        e.currentTarget.style.color = "var(--color-bg)";
-      }}
-    >
-      💡 استلهم أفكارك
-    </button>
+<button
+  onClick={() => {
+    const el = document.getElementById("inspiration");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }}
+  aria-label="استلهم أفكارك"
+  className="px-5 md:px-6 py-2 md:py-3 rounded-full border-2 font-semibold text-sm md:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
+  style={{
+    borderColor: "var(--color-accent)",
+    color: "var(--color-bg)",
+    background: "var(--color-accent)",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.background = "var(--color-accent)";
+    e.currentTarget.style.color = "#fff";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.background = "var(--color-accent)";
+    e.currentTarget.style.color = "var(--color-bg)";
+  }}
+>
+  💡 استلهم أفكارك
+</button>
+
   </div>
 </div>
 
@@ -748,7 +754,7 @@ function PromoStrip({
    =========================== */
 function InspirationGallery({ looks }) {
   return (
-    <section aria-label="Inspiration" className="mt-12">
+    <section id="inspiration" aria-label="Inspiration" className="mt-12">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-2xl font-semibold mb-4">لإلهامك</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
