@@ -89,7 +89,7 @@ export default function UsersPage() {
       </div>
 
       {/* البحث */}
-      <div className="bg-white p-4 rounded-xl shadow flex items-center gap-3">
+      <div className="bg-white p-4 rounded-xl shadow flex items-center gap-5">
         <span className="text-gray-500">🔍</span>
         <input
           placeholder="Search users by name or email..."
@@ -101,27 +101,27 @@ export default function UsersPage() {
 
       {/* جدول اليوزرز */}
       <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
-        <h2 className="text-lg font-bold mb-3">All Users</h2>
+        <h2 className="text-lg font-bold mb-3 text-center">All Users</h2>
 
         <table className="w-full min-w-[700px]">
           <thead>
             <tr className="border-b">
-              <th className="p-2 text-left">Name</th>
-              <th className="p-2 text-left">Email</th>
-              <th className="p-2 text-left">Role</th>
-              <th className="p-2 text-left">Status</th>
-              <th className="p-2 text-left">Joined</th>
-              <th className="p-2 text-left">Actions</th>
+              <th className="p-2 text-center">Name</th>
+              <th className="p-2 text-center">Email</th>
+              <th className="p-2 text-center">Role</th>
+              <th className="p-2 text-center">Status</th>
+              <th className="p-2 text-center">Joined</th>
+              <th className="p-2 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredUsers.map((u) => (
               <tr key={u.id} className="border-b hover:bg-gray-50">
-                <td className="p-2">{u.name}</td>
-                <td className="p-2">{u.email}</td>
+                <td className="p-2 text-center">{u.name}</td>
+                <td className="p-2 text-center">{u.email}</td>
 
-                <td className="p-2">
+                <td className="p-2 text-center">
                   <span className={`px-3 py-1 rounded-full text-sm 
                     ${u.role === "Admin" ? "bg-purple-100 text-purple-600" : ""}
                     ${u.role === "Manager" ? "bg-blue-100 text-blue-600" : ""}
@@ -131,7 +131,7 @@ export default function UsersPage() {
                   </span>
                 </td>
 
-                <td className="p-2">
+                <td className="p-2 text-center">
                   <span className={`px-3 py-1 rounded-full text-sm 
                     ${u.status === "Active" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}
                   `}>
@@ -139,9 +139,9 @@ export default function UsersPage() {
                   </span>
                 </td>
 
-                <td className="p-2">{u.joined}</td>
+                <td className="p-2 text-center">{u.joined}</td>
 
-                <td className="p-2 flex gap-3">
+                <td className="p-2 text-center flex gap-3">
                   <button onClick={() => handleEdit(u)} className="text-blue-500 text-xl">✏️</button>
                   <button onClick={() => handleDelete(u.id)} className="text-red-500 text-xl">🗑️</button>
                 </td>

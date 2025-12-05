@@ -23,7 +23,7 @@ const dashboard = () => {
     { name: "Sun", orders: 135 }
   ]
     return (
-        <div className="m-10 ">
+        <div className="m-10  ">
         <DashboardHeader />
         <StatsCards/> 
         <SalesOverview  data={salesData} />
